@@ -17,9 +17,18 @@ class AIssueServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('aissue')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_aissue_table')
-            ->hasCommand(AIssueCommand::class);
+            ->hasConfigFile();
+        // ->hasViews()
+        // ->hasMigration('create_aissue_table')
+        // ->hasCommand(AIssueCommand::class);
+    }
+
+    public function boot()
+    {
+        parent::boot();
+
+        // load packages migrations
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
     }
 }
