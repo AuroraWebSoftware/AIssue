@@ -2,9 +2,9 @@
 
 namespace AuroraWebSoftware\AIssue\Tests;
 
+use AuroraWebSoftware\AIssue\AIssueServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use AuroraWebSoftware\AIssue\AIssueServiceProvider;
 
 class TestCase extends Orchestra
 {
