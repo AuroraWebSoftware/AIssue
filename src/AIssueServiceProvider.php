@@ -2,9 +2,9 @@
 
 namespace AuroraWebSoftware\AIssue;
 
+use AuroraWebSoftware\AIssue\Commands\AIssueCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use AuroraWebSoftware\AIssue\Commands\AIssueCommand;
 
 class AIssueServiceProvider extends PackageServiceProvider
 {
