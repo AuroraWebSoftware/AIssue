@@ -2,11 +2,11 @@ version: '3.7'
 
 services:
   mariadb:
-    image: mariadb:10.8
+    image: mariadb:latest
     ports:
       - "33062:3306"
     volumes:
-      - ~/apps/mariadb:/var/lib/mysql
+      - ~/apps/mariadb-aissue:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=aissue
       - MYSQL_PASSWORD=aissue
