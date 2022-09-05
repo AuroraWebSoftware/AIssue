@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace AuroraWebSoftware\AIssue\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class AIssueCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'aissue';
 
     public $description = 'My command';
 
