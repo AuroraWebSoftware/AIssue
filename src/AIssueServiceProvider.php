@@ -28,7 +28,6 @@ class AIssueServiceProvider extends PackageServiceProvider
         parent::boot();
 
         // load packages migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 }

@@ -34,12 +34,11 @@ return new class extends Migration
             $table->string('description');
             $table->timestamps();
         });
-
     }
 
-    public function down(){
+    public function down()
+    {
         Schema::dropIfExists('aissue_issues');
         Schema::dropIfExists('aissue_issue_types');
     }
-
 };
