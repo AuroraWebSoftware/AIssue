@@ -31,10 +31,11 @@ interface AIssueContract
     public function getTransitionableStatuses(): array;
 
     /**
-     * @param string $status
+     * @param  string  $status
+     * @return bool
+     *
      * @throws TransitionStatusNotFoundException
      * @throws TransitionPermissionException
-     * @return bool
      */
     public function makeTransition(string $status): bool;
 }
