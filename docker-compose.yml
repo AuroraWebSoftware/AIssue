@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - "33062:3306"
+    volumes:
+      - ~/apps/mariadb-aissue:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=aissue
+      - MYSQL_PASSWORD=aissue
+      - MYSQL_USER=aissue
+      - MYSQL_DATABASE=aissue
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.57.0/24
