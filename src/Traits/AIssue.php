@@ -2,26 +2,11 @@
 
 namespace AuroraWebSoftware\AIssue\Traits;
 
-use AuroraWebSoftware\AIssue\Exceptions\TransitionPermissionException;
-use AuroraWebSoftware\AIssue\Exceptions\TransitionStatusNotFoundException;
+use AuroraWebSoftware\AIssue\Models\AIssue;
 
-trait AIssue {
+trait AIssueModel {
 
-    /**
-     * @return array<string>
-     */
-    public function getTransitionableStatuses(): array {
+    public function createIssue() : AIssue {
 
     }
-
-    /**
-     * @param string $status
-     * @throws TransitionStatusNotFoundException
-     * @throws TransitionPermissionException
-     * @return bool
-     */
-    public function makeTransition(string $status): {
-
-    }
-
 }

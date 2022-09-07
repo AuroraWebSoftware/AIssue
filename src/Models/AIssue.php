@@ -12,6 +12,8 @@ class AIssue extends Model
     use HasFactory;
 
     public $guarded = [];
+    public string $issueType;
+    public string $status;
 
     /**
      * @return array<string>
