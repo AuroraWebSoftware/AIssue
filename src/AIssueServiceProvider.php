@@ -26,7 +26,6 @@ class AIssueServiceProvider extends PackageServiceProvider
     public function boot()
     {
         parent::boot();
-
         // load packages migrations
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
