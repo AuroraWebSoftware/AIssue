@@ -6,13 +6,10 @@ class AIssue
 {
     public function createIssue(): Models\AIssue
     {
-
-
-
     }
 
     /**
-     * @param Models\AIssue $issue
+     * @param  Models\AIssue  $issue
      * @param $status
      * @return bool
      */
@@ -22,11 +19,12 @@ class AIssue
         if (config('aissue')['policyMethod']($permission)) {
             return true;
         }
+
         return false;
     }
 
     /**
-     * @param Models\AIssue $issue
+     * @param  Models\AIssue  $issue
      * @param $status
      * @return Models\AIssue
      */
@@ -36,24 +34,23 @@ class AIssue
             $issue->status = $status;
             $issue->save();
         }
+
         return $issue;
     }
 
-
     /**
-     * @param Models\AIssue $issue
+     * @param  Models\AIssue  $issue
      * @return array<string>
      */
-    public function getTransitionableStatuses(Models\AIssue $issue) : array {
-
+    public function getTransitionableStatuses(Models\AIssue $issue): array
+    {
         $statuses = [];
-        foreach ( config('aissue')['issueTypes'][$issue->issueType] as $index => $item) {
-
+        foreach (config('aissue')['issueTypes'][$issue->issueType] as $index => $item) {
             if ($this->canMakeTransition($issue, $index)) {
                 $statuses[] = $index;
             }
         }
+
         return $statuses;
     }
-
 }
