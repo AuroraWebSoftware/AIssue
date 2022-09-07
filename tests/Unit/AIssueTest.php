@@ -24,9 +24,19 @@ beforeEach(function () {
     ];
 });
 
-test('passOrAbort', function () {
-    expect(1)->toBeTruthy();
+test('can read aissue config', function () {
+    $this->assertNotNull(config('aissue'));
 });
+
+test('can access policy method', function () {
+    $this->assertTrue(config('aissue')['policyMethod'] instanceof \Closure);
+});
+
+test('can access policy method works', function () {
+    $this->assertTrue(config('aissue')['policyMethod']('test permission'));
+});
+
+
 
 test('can get one specified issue', function () {
     //AAuth::organizationNodes();

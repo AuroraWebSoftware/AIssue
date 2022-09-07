@@ -6,9 +6,9 @@ use AuroraWebSoftware\AIssue\Exceptions\TransitionPermissionException;
 use AuroraWebSoftware\AIssue\Exceptions\TransitionStatusNotFoundException;
 
 /**
- * AIssueContract
+ * AIssueModelContract
  */
-interface AIssueContract
+interface AIssueModelContract
 {
     /**
      * @return string
@@ -24,18 +24,4 @@ interface AIssueContract
      * @return string
      */
     public function getAIssueType(): string;
-
-    /**
-     * @return array<string>
-     */
-    public function getTransitionableStatuses(): array;
-
-    /**
-     * @param  string  $status
-     * @return bool
-     *
-     * @throws TransitionStatusNotFoundException
-     * @throws TransitionPermissionException
-     */
-    public function makeTransition(string $status): bool;
 }

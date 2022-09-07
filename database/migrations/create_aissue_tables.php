@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigInteger('model_id');
             $table->bigInteger('assignee_id');
             $table->bigInteger('creater_id');
-            $table->bigInteger('issue_type_id');
+            $table->string('issue_type');
             $table->string('summary');
             $table->string('description');
             $table->bigInteger('priority');
@@ -26,19 +26,10 @@ return new class extends Migration
             $table->dateTime('archived_at');
             $table->timestamps();
         });
-
-        Schema::create('aissue_issue_types', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('workflow');
-            $table->string('name');
-            $table->string('description');
-            $table->timestamps();
-        });
     }
 
     public function down()
     {
         Schema::dropIfExists('aissue_issues');
-        Schema::dropIfExists('aissue_issue_types');
     }
 };
