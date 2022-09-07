@@ -2,9 +2,6 @@
 
 namespace AuroraWebSoftware\AIssue\Contracts;
 
-use AuroraWebSoftware\AIssue\Exceptions\TransitionPermissionException;
-use AuroraWebSoftware\AIssue\Exceptions\TransitionStatusNotFoundException;
-
 /**
  * AIssueModelContract
  */

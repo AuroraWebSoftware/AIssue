@@ -12,7 +12,9 @@ class AIssue extends Model
     use HasFactory;
 
     public $guarded = [];
+
     public string $issueType;
+
     public string $status;
 
     /**
@@ -24,8 +26,9 @@ class AIssue extends Model
     }
 
     /**
-     * @param string $status
+     * @param  string  $status
      * @return bool
+     *
      * @throws TransitionStatusNotFoundException
      * @throws TransitionPermissionException
      */
@@ -33,5 +36,4 @@ class AIssue extends Model
     {
         // statusü değiştircek
     }
-
 }
