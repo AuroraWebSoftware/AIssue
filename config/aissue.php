@@ -2,9 +2,8 @@
 
 // config for AuroraWebSoftware/AIssue
 
-
 return [
-    'policyMethod' => fn($permission): bool => true,
+    'policyMethod' => fn ($permission): bool => true,
     'issueTypes' => [
         'task' => [
             'todo' => ['sort' => 1, 'permission' => 'todo_perm'],

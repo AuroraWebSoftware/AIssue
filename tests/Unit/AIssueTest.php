@@ -1,6 +1,5 @@
 <?php
 
-use AuroraWebSoftware\AAuth\Models\AIssue;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {
@@ -36,25 +35,8 @@ test('can access policy method works', function () {
     $this->assertTrue(config('aissue')['policyMethod']('test permission'));
 });
 
-
-
 test('can get one specified issue', function () {
     //AAuth::organizationNodes();
     // todo
     expect(1)->toBeTruthy();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
