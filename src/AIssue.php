@@ -4,14 +4,19 @@ namespace AuroraWebSoftware\AIssue;
 
 class AIssue
 {
-    public function createIssue(): \AuroraWebSoftware\AIssue\Models\AIssue
+    public function createIssue(): Models\AIssue
     {
 
 
 
     }
 
-    public function canMakeTransition(\AuroraWebSoftware\AIssue\Models\AIssue $issue, $status): bool
+    /**
+     * @param Models\AIssue $issue
+     * @param $status
+     * @return bool
+     */
+    public function canMakeTransition(Models\AIssue $issue, $status): bool
     {
         $permission = config('aissue')['issueTypes']['$issue->issueType'][$status]['permission'];
         if (config('aissue')['policyMethod']($permission)) {
@@ -20,13 +25,35 @@ class AIssue
         return false;
     }
 
-    public function makeTransition(\AuroraWebSoftware\AIssue\Models\AIssue $issue, $status): \AuroraWebSoftware\AIssue\Models\AIssue
+    /**
+     * @param Models\AIssue $issue
+     * @param $status
+     * @return Models\AIssue
+     */
+    public function makeTransition(Models\AIssue $issue, $status): Models\AIssue
     {
         if ($this->canMakeTransition($issue, $status)) {
             $issue->status = $status;
             $issue->save();
         }
         return $issue;
+    }
+
+
+    /**
+     * @param Models\AIssue $issue
+     * @return array<string>
+     */
+    public function getTransitionableStatuses(Models\AIssue $issue) : array {
+
+        $statuses = [];
+        foreach ( config('aissue')['issueTypes'][$issue->issueType] as $index => $item) {
+
+            if ($this->canMakeTransition($issue, $index)) {
+                $statuses[] = $index;
+            }
+        }
+        return $statuses;
     }
 
 }
