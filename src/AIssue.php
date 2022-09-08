@@ -4,8 +4,10 @@ namespace AuroraWebSoftware\AIssue;
 
 class AIssue
 {
-    public function createIssue(): Models\AIssue
+
+    public static function createIssue($data): Models\AIssue
     {
+        return Models\AIssue::create($data);
     }
 
     /**

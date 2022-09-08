@@ -1,26 +1,38 @@
 <?php
 
+use AuroraWebSoftware\AIssue\Models\AIssue;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {
     Artisan::call('migrate:fresh');
+});
 
-    $this->aissueData = [
-        'id' => 1,
-        'code' => '',
-        'model_type' => 'test',
-        'model_id' => 1,
-        'assignee_id' => 1,
-        'creater_id' => 1,
-        'issue_type_id' => 1,
-        'summary' => 'test',
-        'description' => 'test',
-        'status' => 'true',
-        'duedate' => '',
-        'archived' => true,
-        'archived_by' => 1,
-        'archived_at' => '',
+test('can create aissue', function () {
+
+    // arrange
+    $data = [
+        'code'=>'test',
+        'model_type'=>'test',
+        'model_id'=>1,
+        'assignee_id'=>1,
+        'creater_id'=>1,
+        'issue_type'=>'test',
+        'summary'=>'test',
+        'description'=>'test',
+        'priority'=>1,
+        'status'=>'test',
+        'duedate'=>'2022-09-08 09:04:15',
+        'archived'=>true,
+        'archived_by'=>'test',
+        'archived_at'=>'2022-09-08 09:04:15',
     ];
+
+    $createdAissue = AuroraWebSoftware\AIssue\AIssue::createIssue($data);
+
+    $isExist = AIssue::where('id','=',$createdAissue->id)->exists();
+    $this->assertTrue($isExist);
+
+    //2022-09-08 09:04:15
 });
 
 test('can read aissue config', function () {
