@@ -48,3 +48,9 @@ test('can create aissue', function () {
     $isExist = AIssue::where('id', '=', $createdAissue->id)->exists();
     $this->assertTrue($isExist);
 });
+
+test('can make transition', function () {
+    $createdAissue = $this->aissue->createIssue($this->data);
+    $transition = $this->aissue->makeTransition($createdAissue,'todo');
+    $this->assertTrue($transition->status == 'todo');
+});

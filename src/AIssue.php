@@ -16,7 +16,7 @@ class AIssue
      */
     public function canMakeTransition(Models\AIssue $issue, $status): bool
     {
-        $permission = config('aissue')['issueTypes']['$issue->issueType'][$status]['permission'];
+        $permission = config('aissue')['issueTypes']['task'][$status]['permission'];
         if (config('aissue')['policyMethod']($permission)) {
             return true;
         }
