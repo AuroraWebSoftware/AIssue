@@ -5,11 +5,7 @@ use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {
     Artisan::call('migrate:fresh');
-});
-
-test('can create aissue', function () {
-    // arrange
-    $data = [
+    $this->data = [
         'code' => 'test',
         'model_type' => 'test',
         'model_id' => 1,
@@ -26,12 +22,7 @@ test('can create aissue', function () {
         'archived_at' => '2022-09-08 09:04:15',
     ];
 
-    $createdAissue = AuroraWebSoftware\AIssue\AIssue::createIssue($data);
-
-    $isExist = AIssue::where('id', '=', $createdAissue->id)->exists();
-    $this->assertTrue($isExist);
-
-    //2022-09-08 09:04:15
+    $this->aissue = new AuroraWebSoftware\AIssue\AIssue();
 });
 
 test('can read aissue config', function () {
@@ -50,4 +41,10 @@ test('can get one specified issue', function () {
     //AAuth::organizationNodes();
     // todo
     expect(1)->toBeTruthy();
+});
+
+test('can create aissue', function () {
+    $createdAissue = $this->aissue->createIssue($this->data);
+    $isExist = AIssue::where('id', '=', $createdAissue->id)->exists();
+    $this->assertTrue($isExist);
 });
