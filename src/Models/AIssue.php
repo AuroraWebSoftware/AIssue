@@ -12,6 +12,7 @@ class AIssue extends Model
     use HasFactory;
 
     public $guarded = [];
+
     protected $table = 'aissue_issues';
 
     public string $issueType;
