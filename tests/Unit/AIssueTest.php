@@ -51,6 +51,12 @@ test('can create aissue', function () {
 
 test('can make transition', function () {
     $createdAissue = $this->aissue->createIssue($this->data);
-    $transition = $this->aissue->makeTransition($createdAissue, 'todo');
+    $transition = $this->aissue->makeTransition($createdAissue,'todo');
     $this->assertTrue($transition->status == 'todo');
+});
+
+test('can get transitionable statuses', function () {
+    $createdAissue = $this->aissue->createIssue($this->data);
+    $transitionableStatuses = $this->aissue->getTransitionableStatuses($createdAissue);
+   // $this->assertTrue($transition->status == 'todo');
 });
