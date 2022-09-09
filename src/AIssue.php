@@ -20,7 +20,6 @@ class AIssue
         if (config('aissue')['policyMethod']($permission)) {
             return true;
         }
-
         return false;
     }
 
@@ -35,7 +34,6 @@ class AIssue
             $issue->status = $status;
             $issue->save();
         }
-
         return $issue;
     }
 

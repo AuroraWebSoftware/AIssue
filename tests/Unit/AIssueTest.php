@@ -45,8 +45,7 @@ test('can get one specified issue', function () {
 
 test('can create aissue', function () {
     $createdAissue = $this->aissue->createIssue($this->data);
-    $isExist = AIssue::where('id', '=', $createdAissue->id)->exists();
-    $this->assertTrue($isExist);
+    $this->assertDatabaseHas('aissue_issues', $this->data);
 });
 
 test('can make transition', function () {
