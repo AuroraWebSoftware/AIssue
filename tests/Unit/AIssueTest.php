@@ -1,6 +1,5 @@
 <?php
 
-use AuroraWebSoftware\AIssue\Models\AIssue;
 use Illuminate\Support\Facades\Artisan;
 
 beforeEach(function () {
