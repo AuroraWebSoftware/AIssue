@@ -31,9 +31,10 @@ class AIssue
     }
 
     /**
-     * @param Models\AIssue $issue
+     * @param  Models\AIssue  $issue
      * @param $status
      * @return Models\AIssue
+     *
      * @throws TransitionPermissionException
      */
     public function makeTransition(Models\AIssue $issue, $status): Models\AIssue

@@ -69,12 +69,8 @@ test('can get transitionable statuses', function () {
     // $this->assertTrue($transition->status == 'todo');
 });
 
-
 test('x', function () {
-
     $createdModel = Issueable::create(
         ['name' => 'asd']
     );
-
-
 });
