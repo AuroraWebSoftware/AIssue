@@ -1,9 +1,19 @@
 <?php
 
+use AuroraWebSoftware\AIssue\Tests\Models\Issueable;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
     Artisan::call('migrate:fresh');
+
+    Schema::create('issueables', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->timestamps();
+    });
+
     $this->data = [
         'code' => 'test',
         'model_type' => 'test',
@@ -57,4 +67,14 @@ test('can get transitionable statuses', function () {
     $createdAissue = $this->aissue->createIssue($this->data);
     $transitionableStatuses = $this->aissue->getTransitionableStatuses($createdAissue);
     // $this->assertTrue($transition->status == 'todo');
+});
+
+
+test('x', function () {
+
+    $createdModel = Issueable::create(
+        ['name' => 'asd']
+    );
+
+
 });

@@ -10,20 +10,19 @@ return new class extends Migration
     {
         Schema::create('aissue_issues', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code')->nullable();
             $table->string('model_type');
             $table->bigInteger('model_id');
             $table->bigInteger('assignee_id');
             $table->bigInteger('creater_id');
             $table->string('issue_type');
             $table->string('summary');
-            $table->string('description');
-            $table->bigInteger('priority');
+            $table->string('description')->nullable();
+            $table->bigInteger('priority')->default(1);
             $table->string('status');
-            $table->dateTime('duedate');
-            $table->boolean('archived');
-            $table->bigInteger('archived_by');
-            $table->dateTime('archived_at');
+            $table->dateTime('duedate')->nullable();
+            $table->boolean('archived')->default(false);
+            $table->bigInteger('archived_by')->nullable();
+            $table->dateTime('archived_at')->nullable();
             $table->timestamps();
         });
     }

@@ -26,7 +26,8 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
+        //config()->set('database.default', 'testing');
+        config()->set('database.default', 'mysql');
 
         /*
         $migration = include __DIR__.'/../database/migrations/create_aissue_table.php.stub';

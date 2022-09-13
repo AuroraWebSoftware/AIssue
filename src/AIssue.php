@@ -2,9 +2,15 @@
 
 namespace AuroraWebSoftware\AIssue;
 
+use AuroraWebSoftware\AIssue\Exceptions\TransitionPermissionException;
+
 class AIssue
 {
-    public static function createIssue($data): Models\AIssue
+    /**
+     * @param $data
+     * @return Models\AIssue
+     */
+    public function createIssue($data): Models\AIssue
     {
         return Models\AIssue::create($data);
     }
@@ -25,9 +31,10 @@ class AIssue
     }
 
     /**
-     * @param  Models\AIssue  $issue
+     * @param Models\AIssue $issue
      * @param $status
      * @return Models\AIssue
+     * @throws TransitionPermissionException
      */
     public function makeTransition(Models\AIssue $issue, $status): Models\AIssue
     {
@@ -36,7 +43,7 @@ class AIssue
             $issue->save();
         }
 
-        return $issue;
+        throw new TransitionPermissionException();
     }
 
     /**
