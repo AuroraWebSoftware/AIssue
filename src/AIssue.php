@@ -7,22 +7,22 @@ use AuroraWebSoftware\AIssue\Exceptions\TransitionPermissionException;
 class AIssue
 {
     /**
-     * @param $data
+     * @param  array  $data
      * @return Models\AIssue
      */
-    public function createIssue($data): Models\AIssue
+    public function createIssue(array $data): Models\AIssue
     {
         return Models\AIssue::create($data);
     }
 
     /**
      * @param  Models\AIssue  $issue
-     * @param $status
+     * @param  string  $status
      * @return bool
      */
-    public function canMakeTransition(Models\AIssue $issue, $status): bool
+    public function canMakeTransition(Models\AIssue $issue, string $status): bool
     {
-        $permission = config('aissue')['issueTypes']['task'][$status]['permission'];
+        $permission = config('aissue')['issueTypes'][$issue->getIssueType()][$status]['permission'];
         if (config('aissue')['policyMethod']($permission)) {
             return true;
         }
@@ -32,12 +32,12 @@ class AIssue
 
     /**
      * @param  Models\AIssue  $issue
-     * @param $status
+     * @param  string  $status
      * @return Models\AIssue
      *
      * @throws TransitionPermissionException
      */
-    public function makeTransition(Models\AIssue $issue, $status): Models\AIssue
+    public function makeTransition(Models\AIssue $issue, string $status): Models\AIssue
     {
         if ($this->canMakeTransition($issue, $status)) {
             $issue->status = $status;

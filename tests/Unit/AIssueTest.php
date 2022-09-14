@@ -1,8 +1,10 @@
 <?php
 
+use AuroraWebSoftware\AIssue\Models\AIssue;
 use AuroraWebSoftware\AIssue\Tests\Models\Issueable;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
@@ -13,6 +15,16 @@ beforeEach(function () {
         $table->string('name');
         $table->timestamps();
     });
+
+
+    $mockPolicyFunction = function ($permission): bool {
+        if ($permission == 'todo_perm' || $permission == 'in_progress_perm') {
+            return true;
+        }
+        return false;
+    };
+
+    Config::set('aissue.policyMethod', $mockPolicyFunction);
 
 });
 
@@ -34,7 +46,57 @@ test('can get one specified issue', function () {
     expect(1)->toBeTruthy();
 });
 
-test('can create aissue', function () {
+test('can create aissue for a model', function () {
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 1']
+    );
+
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 1.1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
+
+    $this->assertEquals(
+        AIssue::where('id', '=', $createdIssueModel->id)->first()->summary,
+        $createdIssueModel->summary
+    );
+});
+
+
+test('can check make transition for todo', function () {
+
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 2']
+    );
+
+    /** @var AIssue $createdIssueModel */
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
+
+    $this->assertTrue($createdIssueModel->canMakeTransition('todo'));
+});
+
+test('can check make transition for in_progress', function () {
+
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 3']
+    );
+
+    /** @var AIssue $createdIssueModel */
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
+
+    $this->assertTrue($createdIssueModel->canMakeTransition('in_progress'));
+});
+
+test('can check make transition for done', function () {
+
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 4']
+    );
+
+    /** @var AIssue $createdIssueModel */
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
+
+    $this->assertFalse($createdIssueModel->canMakeTransition('done'));
+});
+
+test('can make transition', function () {
 
     $createdModel = Issueable::create(
         ['name' => 'test isuable model 1']
@@ -42,14 +104,6 @@ test('can create aissue', function () {
 
     $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
 
-    $this->assertEquals(
-        \AuroraWebSoftware\AIssue\Models\AIssue::where('id', '=', $createdIssueModel->id )->first()->summary,
-        $createdIssueModel->summary
-    );
-
-});
-
-test('can make transition', function () {
     $createdAissue = $this->aissue->createIssue($this->data);
     $transition = $this->aissue->makeTransition($createdAissue, 'todo');
     $this->assertTrue($transition->status == 'todo');
@@ -61,8 +115,5 @@ test('can get transitionable statuses', function () {
     // $this->assertTrue($transition->status == 'todo');
 });
 
-
 test('x', function () {
-
-
 });

@@ -23,15 +23,14 @@ class AIssueServiceProvider extends PackageServiceProvider
         // ->hasCommand(AIssueCommand::class);
     }
 
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
         // load packages migrations
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-
         $this->publishes([
-            __DIR__ . '/../config' => config_path(),
+            __DIR__.'/../config' => config_path(),
         ], 'aissue-config');
     }
 }
