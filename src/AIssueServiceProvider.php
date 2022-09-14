@@ -29,9 +29,8 @@ class AIssueServiceProvider extends PackageServiceProvider
         // load packages migrations
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-
         $this->publishes([
-            __DIR__ . '/../config' => config_path(),
+            __DIR__.'/../config' => config_path(),
         ], 'aissue-config');
     }
 }

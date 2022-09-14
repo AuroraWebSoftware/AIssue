@@ -8,7 +8,7 @@ namespace AuroraWebSoftware\AIssue\Contracts;
 interface AIssueModelContract
 {
     /**
-     * @param string $issueType
+     * @param  string  $issueType
      * @return string
      */
     public static function getAIssueDefaultStatus(string $issueType): string;

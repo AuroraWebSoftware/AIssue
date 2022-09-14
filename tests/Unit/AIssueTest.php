@@ -13,7 +13,6 @@ beforeEach(function () {
         $table->string('name');
         $table->timestamps();
     });
-
 });
 
 test('can read aissue config', function () {
@@ -35,7 +34,6 @@ test('can get one specified issue', function () {
 });
 
 test('can create aissue', function () {
-
     $createdModel = Issueable::create(
         ['name' => 'test isuable model 1']
     );
@@ -43,10 +41,9 @@ test('can create aissue', function () {
     $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
 
     $this->assertEquals(
-        \AuroraWebSoftware\AIssue\Models\AIssue::where('id', '=', $createdIssueModel->id )->first()->summary,
+        \AuroraWebSoftware\AIssue\Models\AIssue::where('id', '=', $createdIssueModel->id)->first()->summary,
         $createdIssueModel->summary
     );
-
 });
 
 test('can make transition', function () {
@@ -61,8 +58,5 @@ test('can get transitionable statuses', function () {
     // $this->assertTrue($transition->status == 'todo');
 });
 
-
 test('x', function () {
-
-
 });

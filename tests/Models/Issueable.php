@@ -16,7 +16,7 @@ class Issueable extends Model implements AIssueModelContract
     protected $fillable = ['name'];
 
     /**
-     * @param string $issueType
+     * @param  string  $issueType
      * @return string
      */
     public static function getAIssueDefaultStatus(string $issueType): string

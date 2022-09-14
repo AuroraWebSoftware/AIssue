@@ -10,7 +10,9 @@ class AIssue extends Model
     use HasFactory;
 
     public $guarded = [];
+
     public string $status;
+
     public string $issue_type;
 
     protected $table = 'aissue_issues';
@@ -42,12 +44,11 @@ class AIssue extends Model
     }
 
     /**
-     * @param AIssue $issue
+     * @param  AIssue  $issue
      * @return array
      */
     public function getTransitionableStatuses(AIssue $issue): array
     {
         return \AuroraWebSoftware\AIssue\Facades\AIssue::getTransitionableStatuses($this);
     }
-
 }
