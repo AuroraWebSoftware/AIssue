@@ -2,8 +2,6 @@
 
 namespace AuroraWebSoftware\AIssue\Models;
 
-use AuroraWebSoftware\AIssue\Exceptions\TransitionPermissionException;
-use AuroraWebSoftware\AIssue\Exceptions\TransitionStatusNotFoundException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,30 +10,44 @@ class AIssue extends Model
     use HasFactory;
 
     public $guarded = [];
+    public string $status;
+    public string $issue_type;
 
     protected $table = 'aissue_issues';
 
-    public string $issueType;
-
-    public string $status;
-
     /**
-     * @return array<string>
+     * @return string
      */
-    public function getTransitionableStatuses(): array
+    public function getIssueType(): string
     {
-        // config('aissue')
+        return $this->issue_type;
     }
 
     /**
-     * @param  string  $status
+     * @param $status
      * @return bool
-     *
-     * @throws TransitionStatusNotFoundException
-     * @throws TransitionPermissionException
      */
-    public function makeTransition(string $status): bool
+    public function canMakeTransition($status): bool
     {
-        // statusü değiştircek
+        return \AuroraWebSoftware\AIssue\Facades\AIssue::canMakeTransition($this, $status);
     }
+
+    /**
+     * @param $status
+     * @return AIssue
+     */
+    public function makeTransition($status): AIssue
+    {
+        return \AuroraWebSoftware\AIssue\Facades\AIssue::makeTransition($this, $status);
+    }
+
+    /**
+     * @param AIssue $issue
+     * @return array
+     */
+    public function getTransitionableStatuses(AIssue $issue): array
+    {
+        return \AuroraWebSoftware\AIssue\Facades\AIssue::getTransitionableStatuses($this);
+    }
+
 }

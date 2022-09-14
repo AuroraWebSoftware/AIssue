@@ -6,6 +6,9 @@ use AuroraWebSoftware\AIssue\Contracts\AIssueModelContract;
 use AuroraWebSoftware\AIssue\Traits\AIssueModelTrait;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read int $id
+ */
 class Issueable extends Model implements AIssueModelContract
 {
     use AIssueModelTrait;
@@ -13,17 +16,10 @@ class Issueable extends Model implements AIssueModelContract
     protected $fillable = ['name'];
 
     /**
+     * @param string $issueType
      * @return string
      */
-    public static function getAIssueType(): string
-    {
-        return 'task';
-    }
-
-    /**
-     * @return string
-     */
-    public static function getAIssueDefaultStatus(): string
+    public static function getAIssueDefaultStatus(string $issueType): string
     {
         return 'todo';
     }
@@ -37,9 +33,9 @@ class Issueable extends Model implements AIssueModelContract
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getAIssueModelId(): string
+    public function getAIssueModelId(): int
     {
         return $this->id;
     }

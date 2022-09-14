@@ -53,7 +53,7 @@ class AIssue
     public function getTransitionableStatuses(Models\AIssue $issue): array
     {
         $statuses = [];
-        foreach (config('aissue')['issueTypes'][$issue->issueType] as $index => $item) {
+        foreach (config('aissue')['issueTypes'][$issue->getIssueType()] as $index => $item) {
             if ($this->canMakeTransition($issue, $index)) {
                 $statuses[] = $index;
             }

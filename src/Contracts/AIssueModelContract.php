@@ -8,14 +8,10 @@ namespace AuroraWebSoftware\AIssue\Contracts;
 interface AIssueModelContract
 {
     /**
+     * @param string $issueType
      * @return string
      */
-    public static function getAIssueType(): string;
-
-    /**
-     * @return string
-     */
-    public static function getAIssueDefaultStatus(): string;
+    public static function getAIssueDefaultStatus(string $issueType): string;
 
     /**
      * @return string
@@ -23,7 +19,7 @@ interface AIssueModelContract
     public static function getAIssueModelType(): string;
 
     /**
-     * @return string
+     * @return int
      */
-    public function getAIssueModelId(): string;
+    public function getAIssueModelId(): int;
 }

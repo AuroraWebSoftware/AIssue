@@ -14,24 +14,6 @@ beforeEach(function () {
         $table->timestamps();
     });
 
-    $this->data = [
-        'code' => 'test',
-        'model_type' => 'test',
-        'model_id' => 1,
-        'assignee_id' => 1,
-        'creater_id' => 1,
-        'issue_type' => 'test',
-        'summary' => 'test',
-        'description' => 'test',
-        'priority' => 1,
-        'status' => 'test',
-        'duedate' => '2022-09-08 09:04:15',
-        'archived' => true,
-        'archived_by' => 'test',
-        'archived_at' => '2022-09-08 09:04:15',
-    ];
-
-    $this->aissue = new AuroraWebSoftware\AIssue\AIssue();
 });
 
 test('can read aissue config', function () {
@@ -53,8 +35,18 @@ test('can get one specified issue', function () {
 });
 
 test('can create aissue', function () {
-    $createdAissue = $this->aissue->createIssue($this->data);
-    $this->assertDatabaseHas('aissue_issues', $this->data);
+
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 1']
+    );
+
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
+
+    $this->assertEquals(
+        \AuroraWebSoftware\AIssue\Models\AIssue::where('id', '=', $createdIssueModel->id )->first()->summary,
+        $createdIssueModel->summary
+    );
+
 });
 
 test('can make transition', function () {
@@ -71,10 +63,6 @@ test('can get transitionable statuses', function () {
 
 
 test('x', function () {
-
-    $createdModel = Issueable::create(
-        ['name' => 'asd']
-    );
 
 
 });

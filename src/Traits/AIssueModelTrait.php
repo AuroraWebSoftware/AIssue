@@ -11,6 +11,7 @@ trait AIssueModelTrait
     /**
      * @param int $assigneeId
      * @param int $createrId
+     * @param string $issueType
      * @param string $summary
      * @param string $description
      * @param int $priority
@@ -20,6 +21,7 @@ trait AIssueModelTrait
     public function createIssue(
         int    $assigneeId,
         int    $createrId,
+        string $issueType,
         string $summary,
         string $description,
         int    $priority,
@@ -27,48 +29,18 @@ trait AIssueModelTrait
     ): \AuroraWebSoftware\AIssue\Models\AIssue
     {
         $data = [
-            'code' => 'test',
             'model_type' => static::getAIssueModelType(),
-            'model_id' => $this->id,
+            'model_id' => $this->getAIssueModelId(),
             'assignee_id' => $assigneeId,
             'creater_id' => $createrId,
-            'issue_type' => static::getAIssueType(),
+            'issue_type' => $issueType,
             'summary' => $summary,
             'description' => $description,
             'priority' => $priority,
-            'status' => static::getAIssueDefaultStatus(),
+            'status' => static::getAIssueDefaultStatus($issueType),
             'duedate' => $duedate,
         ];
 
         return AIssue::createIssue($data);
     }
-
-    /**
-     * @param $status
-     * @return bool
-     */
-    public function canMakeTransition($status): bool
-    {
-        return AIssue::canMakeTransition($this, $status);
-    }
-
-    /**
-     * @param $status
-     * @return \AuroraWebSoftware\AIssue\Models\AIssue
-     */
-    public function makeTransition($status): \AuroraWebSoftware\AIssue\Models\AIssue
-    {
-        return AIssue::makeTransition($this, $status);
-    }
-
-    /**
-     * @param \AuroraWebSoftware\AIssue\Models\AIssue $issue
-     * @return array
-     */
-    public function getTransitionableStatuses(\AuroraWebSoftware\AIssue\Models\AIssue $issue): array
-    {
-        return AIssue::getTransitionableStatuses($this);
-    }
-
-
 }
