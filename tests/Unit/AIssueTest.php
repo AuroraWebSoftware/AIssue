@@ -16,16 +16,15 @@ beforeEach(function () {
         $table->timestamps();
     });
 
-
     $mockPolicyFunction = function ($permission): bool {
         if ($permission == 'todo_perm' || $permission == 'in_progress_perm') {
             return true;
         }
+
         return false;
     };
 
     Config::set('aissue.policyMethod', $mockPolicyFunction);
-
 });
 
 test('can read aissue config', function () {
@@ -36,8 +35,8 @@ test('can access policy method', function () {
     $this->assertTrue(config('aissue')['policyMethod'] instanceof \Closure);
 });
 
-test('can access policy method works', function () {
-    $this->assertTrue(config('aissue')['policyMethod']('test permission'));
+test('can access policy method works for todo', function () {
+    $this->assertTrue(config('aissue')['policyMethod']('todo_perm'));
 });
 
 test('can get one specified issue', function () {
@@ -59,9 +58,7 @@ test('can create aissue for a model', function () {
     );
 });
 
-
 test('can check make transition for todo', function () {
-
     $createdModel = Issueable::create(
         ['name' => 'test isuable model 2']
     );
@@ -73,7 +70,6 @@ test('can check make transition for todo', function () {
 });
 
 test('can check make transition for in_progress', function () {
-
     $createdModel = Issueable::create(
         ['name' => 'test isuable model 3']
     );
@@ -85,7 +81,6 @@ test('can check make transition for in_progress', function () {
 });
 
 test('can check make transition for done', function () {
-
     $createdModel = Issueable::create(
         ['name' => 'test isuable model 4']
     );
@@ -94,26 +89,4 @@ test('can check make transition for done', function () {
     $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
 
     $this->assertFalse($createdIssueModel->canMakeTransition('done'));
-});
-
-test('can make transition', function () {
-
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 1']
-    );
-
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
-
-    $createdAissue = $this->aissue->createIssue($this->data);
-    $transition = $this->aissue->makeTransition($createdAissue, 'todo');
-    $this->assertTrue($transition->status == 'todo');
-});
-
-test('can get transitionable statuses', function () {
-    $createdAissue = $this->aissue->createIssue($this->data);
-    $transitionableStatuses = $this->aissue->getTransitionableStatuses($createdAissue);
-    // $this->assertTrue($transition->status == 'todo');
-});
-
-test('x', function () {
 });

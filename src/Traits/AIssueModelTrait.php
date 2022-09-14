@@ -26,7 +26,6 @@ trait AIssueModelTrait
         int $priority,
         Carbon $duedate,
     ): \AuroraWebSoftware\AIssue\Models\AIssue {
-
         // todo issueType Kontrolü
         // todo status yetki kontrolü
 

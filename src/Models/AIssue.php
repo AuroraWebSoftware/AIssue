@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property-read string $status
+ * @property string $status
  * @property-read string $issue_type
  */
 class AIssue extends Model
