@@ -6,7 +6,7 @@ services:
     ports:
       - "33062:3306"
     volumes:
-      - ~/apps/mariadb-aissue:/var/lib/mysql
+      - ~/apps/mariadb-aissue2:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=aissue
       - MYSQL_PASSWORD=aissue
@@ -17,4 +17,4 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.16.57.0/24
+        - subnet: 172.16.54.0/24
