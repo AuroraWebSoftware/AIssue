@@ -24,15 +24,15 @@ You can install the package via composer:
 composer require aurorawebsoftware/aissue
 ```
 
-Todo
+You must add AIssueModelTrait Trait to the Issueable Model.
 
 ```php
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use AuroraWebSoftware\aissue\Traits\aissueUser;
+use AuroraWebSoftware\AIssue\Contracts\AIssueModelContract;
+use AuroraWebSoftware\AIssue\Traits\AIssueModelTrait;
 
-class User extends Authenticatable
+class Issueable extends Model implements AIssueModelContract
 {
-    use ;
+    use AAuthUser;
 
     // ...
 }
@@ -44,19 +44,6 @@ You can publish and run the migrations with:
 php artisan migrate
 ```
 
-You can publish the sample data seeder with:
-
-```bash
-php artisan vendor:publish --tag="aissue-seeders"
-php artisan db:seed --class=SampleDataSeeder
-```
-
-Optionally, You can seed the sample data with:
-
-```bash
-php artisan db:seed --class=SampleDataSeeder
-```
-
 You can publish the config file with:
 
 ```bash
@@ -64,14 +51,34 @@ php artisan vendor:publish --tag="aissue-config"
 ```
 
 This is the example contents of the published config file:
+```bash
 
-```php
-return [
-];
+    return [
+        'policyMethod' => fn ($permission): bool => true,
+        'issueTypes' => [
+            'task' => [
+                'todo' => ['sort' => 1, 'permission' => 'todo_perm'],
+                'in_progress' => ['sort' => 2, 'permission' => 'in_progress_perm'],
+                'done' => ['sort' => 3, 'permission' => 'done_perm'],
+            ],
+        ],
+    ];
 ```
 
+**Permission Config File**
+
+Permissions are stored inside `config/aissue.php` which is published after installing
+
+
 # Main Philosophy
-Todo
+# 
+
+In some systems, many users interact with each other. these interacting users perform a number of tasks
+in a certain order by using the tools that the system allows them. the sequence and result of these 
+tasks completed by users are of concern to other users.The results of these tasks should also be reported 
+to other relevant users. This package, manages this process, which we call the work flow system, 
+and notifies the relevant users.This package manages this process, which we call the workflow system,
+and informs the relevant users. also saves process information in database
 
 ---
 > If you don't need organizational roles, **aissue** may not be suitable for your work.
@@ -79,8 +86,8 @@ Todo
 
 # Aissue Terminology
 
-Before using aissue its worth to understand the main terminology of aissue.
-aissue differs from other Auth Packages due to its organizational structure.
+Before using AIssue its worth to understand the main terminology of AIssue.
+The difference of Issue from other packages is that it perform simple-level workflows with its simplified structure.
 
 
 # Usage
@@ -88,14 +95,92 @@ aissue differs from other Auth Packages due to its organizational structure.
 Before using this, please make sure that you published the config files.
 
 
-## aissue Service and Facade Methods
+## AIssue Services, Service Provider and Facade
 
-### todo
+## AIssueServiceProvider
+
+Organization Service is used for organization related jobs. The service can be initialized as
+
+```php
+    $aissueServiceProvider = new AIssueServiceProvider()
+```
+or via dependency injecting
 
 ```php
 
+    public function index(AIssueServiceProvider $aissueServiceProvider)
+{
+   
+}
 ```
 
+
+
+### Creating an Issuable
+```php
+
+$createdModel = Issueable::create(
+        ['name' => 'example isuable model']
+    );
+
+```
+
+### Making a transition for todo, in_progres and done
+```php
+
+    $createdModel = Issueable::create(
+            ['name' => 'example isuable model']
+        );
+    
+        /** @var AIssue $createdIssueModel */
+        $createdIssueModel = $createdModel->createIssue(1, 1, 'example', 'example isssue', 'example', 1, \Illuminate\Support\Carbon::now());
+                                                                                                        //todo,in_progress,done 
+        $createdIssueModel->canMakeTransition('todo')
+
+```
+
+### Getting transitionable statuses
+```php
+
+    $createdModel = Issueable::create(
+        ['name' => 'example isuable model 4']
+    );
+
+    /** @var AIssue $createdIssueModel */
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'example', 'example isssue', 'example', 1, \Illuminate\Support\Carbon::now());
+    $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
+
+    $this->assertTrue($transitionable == ["todo","in_progress"]);
+
+```
+
+### Using AIssue Interface and Trait with Eloquent Models
+To turn an Eloquent Model into an AIssue ; 
+Model must implement AIssueModelContract and use AIssueModelTrait Trait.
+After adding AIssueModelContract trait, you will be able to use AIssue methods within the model
+```php
+
+    namespace App\Models\ExampleModel;
+
+    use AuroraWebSoftware\AIssue\Contracts\AIssueModelContract;
+    use AuroraWebSoftware\AIssue\Traits\AIssueModelTrait;
+    use Illuminate\Database\Eloquent\Model;
+    
+    class ExampleModel extends Model implements AIssueModelContract
+    {
+        use AIssueModelTrait;
+    
+        // implementation
+}
+
+```
+
+Getting All Model Collection without any access control
+```php
+
+    ExampleModel::withoutGlobalScopes()->all()
+
+```
 
 ## Changelog
 
