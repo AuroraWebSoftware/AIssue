@@ -101,7 +101,7 @@ test('can make transition ', function () {
 
     $transition = $createdIssueModel->makeTransition('in_progress');
 
-    $this->assertTrue($transition->status == 'in_progress' );
+    $this->assertTrue($transition->status == 'in_progress');
 });
 
 test('can check get transitionable statuses ', function () {
@@ -112,15 +112,12 @@ test('can check get transitionable statuses ', function () {
     /** @var AIssue $createdIssueModel */
     $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
     $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
-    $this->assertTrue($transitionable == ["todo","in_progress"]);
+    $this->assertTrue($transitionable == ['todo', 'in_progress']);
 });
-
 
 // AIssueModelTrait Test
 
 test('can create aissue from trait class ', function () {
-
-
     $createdModel = Issueable::create(
         ['name' => 'test isuable model 1 trait']
     );
@@ -244,7 +241,7 @@ test('can make transition from trait class', function () {
 
     $transition = $createdIssueModel->makeTransition('in_progress');
 
-    $this->assertTrue($transition->status == 'in_progress' );
+    $this->assertTrue($transition->status == 'in_progress');
 });
 
 test('can check get transitionable statuses from trait class', function () {
@@ -270,6 +267,5 @@ test('can check get transitionable statuses from trait class', function () {
     $createdIssueModel = $aissueTrait->createIssue($data);
 
     $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
-    $this->assertTrue($transitionable == ["todo","in_progress"]);
+    $this->assertTrue($transitionable == ['todo', 'in_progress']);
 });
-
