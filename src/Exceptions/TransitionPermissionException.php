@@ -6,4 +6,5 @@ use Illuminate\Auth\AuthenticationException;
 
 class TransitionPermissionException extends AuthenticationException
 {
+
 }

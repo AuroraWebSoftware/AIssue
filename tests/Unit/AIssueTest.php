@@ -90,3 +90,186 @@ test('can check make transition for done', function () {
 
     $this->assertFalse($createdIssueModel->canMakeTransition('done'));
 });
+
+test('can make transition ', function () {
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 5']
+    );
+
+    /** @var AIssue $createdIssueModel */
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
+
+    $transition = $createdIssueModel->makeTransition('in_progress');
+
+    $this->assertTrue($transition->status == 'in_progress' );
+});
+
+test('can check get transitionable statuses ', function () {
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 4']
+    );
+
+    /** @var AIssue $createdIssueModel */
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, \Illuminate\Support\Carbon::now());
+    $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
+    $this->assertTrue($transitionable == ["todo","in_progress"]);
+});
+
+
+// AIssueModelTrait Test
+
+test('can create aissue from trait class ', function () {
+
+
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 1 trait']
+    );
+
+    $aissueTrait = new AuroraWebSoftware\AIssue\AIssue;
+
+    $data = [
+        'model_type' => $createdModel->getAIssueModelType(),
+        'model_id' => $createdModel->getAIssueModelId(),
+        'assignee_id' => 1,
+        'creater_id' => 1,
+        'issue_type' => 'task',
+        'summary' => 'test isssue trait',
+        'description' => 'asdasd',
+        'priority' => 1,
+        'status' => $createdModel->getAIssueDefaultStatus('task'),
+        'duedate' => \Illuminate\Support\Carbon::now(),
+    ];
+
+    $createdIssueModel = $aissueTrait->createIssue($data);
+    $this->assertEquals(
+        AIssue::where('id', '=', $createdIssueModel->id)->first()->summary,
+        $createdIssueModel->summary
+    );
+});
+
+test('can check make transition for todo from trait class', function () {
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 2 trait']
+    );
+
+    $aissueTrait = new AuroraWebSoftware\AIssue\AIssue;
+
+    $data = [
+        'model_type' => $createdModel->getAIssueModelType(),
+        'model_id' => $createdModel->getAIssueModelId(),
+        'assignee_id' => 1,
+        'creater_id' => 1,
+        'issue_type' => 'task',
+        'summary' => 'test isssue trait',
+        'description' => 'asdasd',
+        'priority' => 1,
+        'status' => $createdModel->getAIssueDefaultStatus('task'),
+        'duedate' => \Illuminate\Support\Carbon::now(),
+    ];
+
+    $createdIssueModel = $aissueTrait->createIssue($data);
+
+    $this->assertTrue($createdIssueModel->canMakeTransition('todo'));
+});
+
+test('can check make transition for in_progress from trait class', function () {
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 3 trait']
+    );
+
+    $aissueTrait = new AuroraWebSoftware\AIssue\AIssue;
+
+    $data = [
+        'model_type' => $createdModel->getAIssueModelType(),
+        'model_id' => $createdModel->getAIssueModelId(),
+        'assignee_id' => 1,
+        'creater_id' => 1,
+        'issue_type' => 'task',
+        'summary' => 'test isssue trait',
+        'description' => 'asdasd',
+        'priority' => 1,
+        'status' => $createdModel->getAIssueDefaultStatus('task'),
+        'duedate' => \Illuminate\Support\Carbon::now(),
+    ];
+
+    $createdIssueModel = $aissueTrait->createIssue($data);
+    $this->assertTrue($createdIssueModel->canMakeTransition('in_progress'));
+});
+
+test('can check make transition for done from trait class', function () {
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 4 trait']
+    );
+
+    $aissueTrait = new AuroraWebSoftware\AIssue\AIssue;
+
+    $data = [
+        'model_type' => $createdModel->getAIssueModelType(),
+        'model_id' => $createdModel->getAIssueModelId(),
+        'assignee_id' => 1,
+        'creater_id' => 1,
+        'issue_type' => 'task',
+        'summary' => 'test isssue trait',
+        'description' => 'asdasd',
+        'priority' => 1,
+        'status' => $createdModel->getAIssueDefaultStatus('task'),
+        'duedate' => \Illuminate\Support\Carbon::now(),
+    ];
+
+    $createdIssueModel = $aissueTrait->createIssue($data);
+    $this->assertFalse($createdIssueModel->canMakeTransition('done'));
+});
+
+test('can make transition from trait class', function () {
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 5 trait']
+    );
+
+    $aissueTrait = new AuroraWebSoftware\AIssue\AIssue;
+
+    $data = [
+        'model_type' => $createdModel->getAIssueModelType(),
+        'model_id' => $createdModel->getAIssueModelId(),
+        'assignee_id' => 1,
+        'creater_id' => 1,
+        'issue_type' => 'task',
+        'summary' => 'test isssue trait',
+        'description' => 'asdasd',
+        'priority' => 1,
+        'status' => $createdModel->getAIssueDefaultStatus('task'),
+        'duedate' => \Illuminate\Support\Carbon::now(),
+    ];
+
+    $createdIssueModel = $aissueTrait->createIssue($data);
+
+    $transition = $createdIssueModel->makeTransition('in_progress');
+
+    $this->assertTrue($transition->status == 'in_progress' );
+});
+
+test('can check get transitionable statuses from trait class', function () {
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model 4 trait']
+    );
+
+    $aissueTrait = new AuroraWebSoftware\AIssue\AIssue;
+
+    $data = [
+        'model_type' => $createdModel->getAIssueModelType(),
+        'model_id' => $createdModel->getAIssueModelId(),
+        'assignee_id' => 1,
+        'creater_id' => 1,
+        'issue_type' => 'task',
+        'summary' => 'test isssue trait',
+        'description' => 'asdasd',
+        'priority' => 1,
+        'status' => $createdModel->getAIssueDefaultStatus('task'),
+        'duedate' => \Illuminate\Support\Carbon::now(),
+    ];
+
+    $createdIssueModel = $aissueTrait->createIssue($data);
+
+    $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
+    $this->assertTrue($transitionable == ["todo","in_progress"]);
+});
+

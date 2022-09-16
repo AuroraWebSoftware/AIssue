@@ -34,7 +34,6 @@ class AIssue
      * @param  Models\AIssue  $issue
      * @param  string  $status
      * @return Models\AIssue
-     *
      * @throws TransitionPermissionException
      */
     public function makeTransition(Models\AIssue $issue, string $status): Models\AIssue
@@ -42,8 +41,8 @@ class AIssue
         if ($this->canMakeTransition($issue, $status)) {
             $issue->status = $status;
             $issue->save();
+            return $issue;
         }
-
         throw new TransitionPermissionException();
     }
 
@@ -59,7 +58,6 @@ class AIssue
                 $statuses[] = $index;
             }
         }
-
         return $statuses;
     }
 }
