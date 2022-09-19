@@ -26,7 +26,6 @@ class AIssue
         if (config('aissue')['policyMethod']($permission)) {
             return true;
         }
-
         return false;
     }
 
@@ -60,7 +59,6 @@ class AIssue
                 $statuses[] = $index;
             }
         }
-
         return $statuses;
     }
 }
