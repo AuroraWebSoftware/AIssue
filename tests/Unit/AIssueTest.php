@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
-
 beforeEach(function () {
     Artisan::call('migrate:fresh');
 
@@ -23,6 +22,7 @@ beforeEach(function () {
         if ($permission == 'todo_perm' || $permission == 'in_progress_perm') {
             return true;
         }
+
         return false;
     };
 
@@ -114,7 +114,6 @@ test('cannot make transition using Issue Model without permission', function () 
 
     $transition = $createdIssueModel->makeTransition('done');
 })->throws(TransitionPermissionException::class);
-
 
 test('can check get transitionable statuses ', function () {
     $createdModel = Issueable::create(
