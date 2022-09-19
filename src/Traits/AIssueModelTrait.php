@@ -20,20 +20,20 @@ trait AIssueModelTrait
      * @throws IssueTypeNotFoundException
      */
     public function createIssue(
-        int $assigneeId,
-        int $createrId,
+        int    $assigneeId,
+        int    $createrId,
         string $issueType,
         string $summary,
         string $description,
-        int $priority,
+        int    $priority,
         Carbon $duedate,
-    ): \AuroraWebSoftware\AIssue\Models\AIssue {
-
-        $issueTypes = config('aissue')['issueTypes'];
-        if(!in_array($issueType, $issueTypes)){
-            throw new IssueTypeNotFoundException();
+    ): \AuroraWebSoftware\AIssue\Models\AIssue
+    {
+        $configIssueTypes = config('aissue')['issueTypes'];
+        if (! array_key_exists($issueType, $configIssueTypes)) {
+            throw new IssueTypeNotFoundException("$issueType Not Found, Please check Your Config File.");
         }
-        // todo issueType Kontrolü
+
         // todo status yetki kontrolü
 
         $data = [
