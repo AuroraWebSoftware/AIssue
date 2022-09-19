@@ -42,8 +42,9 @@ class AIssue
         if ($this->canMakeTransition($issue, $status)) {
             $issue->status = $status;
             $issue->save();
-        }
 
+            return $issue;
+        }
         throw new TransitionPermissionException();
     }
 

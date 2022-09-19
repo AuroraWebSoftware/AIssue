@@ -2,6 +2,7 @@
 
 namespace AuroraWebSoftware\AIssue\Traits;
 
+use AuroraWebSoftware\AIssue\Exceptions\IssueTypeNotFoundException;
 use AuroraWebSoftware\AIssue\Facades\AIssue;
 use Illuminate\Support\Carbon;
 
@@ -16,6 +17,8 @@ trait AIssueModelTrait
      * @param  int  $priority
      * @param  Carbon  $duedate
      * @return \AuroraWebSoftware\AIssue\Models\AIssue
+     *
+     * @throws IssueTypeNotFoundException
      */
     public function createIssue(
         int $assigneeId,
@@ -26,7 +29,11 @@ trait AIssueModelTrait
         int $priority,
         Carbon $duedate,
     ): \AuroraWebSoftware\AIssue\Models\AIssue {
-        // todo issueType Kontrolü
+        $configIssueTypes = config('aissue')['issueTypes'];
+        if (! array_key_exists($issueType, $configIssueTypes)) {
+            throw new IssueTypeNotFoundException("$issueType Not Found, Please check Your Config File.");
+        }
+
         // todo status yetki kontrolü
 
         $data = [
