@@ -9,14 +9,15 @@ use Illuminate\Support\Carbon;
 trait AIssueModelTrait
 {
     /**
-     * @param int $assigneeId
-     * @param int $createrId
-     * @param string $issueType
-     * @param string $summary
-     * @param string $description
-     * @param int $priority
-     * @param Carbon $duedate
+     * @param  int  $assigneeId
+     * @param  int  $createrId
+     * @param  string  $issueType
+     * @param  string  $summary
+     * @param  string  $description
+     * @param  int  $priority
+     * @param  Carbon  $duedate
      * @return \AuroraWebSoftware\AIssue\Models\AIssue
+     *
      * @throws IssueTypeNotFoundException
      */
     public function createIssue(
@@ -28,9 +29,8 @@ trait AIssueModelTrait
         int $priority,
         Carbon $duedate,
     ): \AuroraWebSoftware\AIssue\Models\AIssue {
-
         $issueTypes = config('aissue')['issueTypes'];
-        if(!in_array($issueType, $issueTypes)){
+        if (! in_array($issueType, $issueTypes)) {
             throw new IssueTypeNotFoundException();
         }
         // todo issueType Kontrolü
