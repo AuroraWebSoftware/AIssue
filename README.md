@@ -1,16 +1,20 @@
 # AIssue for Laravel
 
+Basic and Lean Issue Management Package for Laravel
+
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/aurorawebsoftware/aissue.svg?style=flat-square)](https://packagist.org/packages/aurorawebsoftware/aissue)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/aurorawebsoftware/aissue/run-tests?label=tests)](https://github.com/aurorawebsoftware/aissue/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/aurorawebsoftware/aissue/Check%20&%20fix%20styling?label=code%20style)](https://github.com/aurorawebsoftware/aissue/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/aurorawebsoftware/aissue.svg?style=flat-square)](https://packagist.org/packages/aurora/aissue)
 
-Todo ....
 
 # Features
 
-- Todo ...
-
+- Basic Workflow and Issue Management
+- Limitless Issue Types
+- Limitless Statuses for Issue Types
+- Authenticatable Issue Status Transitions
+- Easy to Use and Lean
 ---
 
 
@@ -24,7 +28,7 @@ You can install the package via composer:
 composer require aurorawebsoftware/aissue
 ```
 
-You must add AIssueModelTrait Trait to the Issueable Model.
+You must add AIssueModelTrait Trait to the **Issueable** Model and The model must implement **AIssueModelContract**
 
 ```php
 use AuroraWebSoftware\AIssue\Contracts\AIssueModelContract;
@@ -32,7 +36,7 @@ use AuroraWebSoftware\AIssue\Traits\AIssueModelTrait;
 
 class Issueable extends Model implements AIssueModelContract
 {
-    use AAuthUser;
+    use AIssueModelTrait;;
 
     // ...
 }
@@ -67,22 +71,8 @@ This is the example contents of the published config file:
 
 **Permission Config File**
 
-Permissions are stored inside `config/aissue.php` which is published after installing
+Permissions are stored `config/aissue.php` is published after installing
 
-
-# Main Philosophy
-# 
-
-In some systems, many users interact with each other. these interacting users perform a number of tasks
-in a certain order by using the tools that the system allows them. the sequence and result of these 
-tasks completed by users are of concern to other users.The results of these tasks should also be reported 
-to other relevant users. This package, manages this process, which we call the work flow system, 
-and notifies the relevant users.This package manages this process, which we call the workflow system,
-and informs the relevant users. also saves process information in database
-
----
-> If you don't need organizational roles, **aissue** may not be suitable for your work.
----
 
 # Aissue Terminology
 
@@ -97,24 +87,7 @@ Before using this, please make sure that you published the config files.
 
 ## AIssue Services, Service Provider and Facade
 
-## AIssueServiceProvider
-
-Organization Service is used for organization related jobs. The service can be initialized as
-
-```php
-    $aissueServiceProvider = new AIssueServiceProvider()
-```
-or via dependency injecting
-
-```php
-
-    public function index(AIssueServiceProvider $aissueServiceProvider)
-{
-   
-}
-```
-
-
+// todo
 
 ### Creating an Issuable
 ```php
@@ -122,7 +95,6 @@ or via dependency injecting
 $createdModel = Issueable::create(
         ['name' => 'example isuable model']
     );
-
 ```
 
 ### Making a transition for todo, in_progres and done
@@ -175,12 +147,6 @@ After adding AIssueModelContract trait, you will be able to use AIssue methods w
 
 ```
 
-Getting All Model Collection without any access control
-```php
-
-    ExampleModel::withoutGlobalScopes()->all()
-
-```
 
 ## Changelog
 
@@ -192,7 +158,6 @@ Please see [CONTRIBUTING](README-contr.md) for details.
 
 ## Security Vulnerabilities
 
-// todo ?
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 
