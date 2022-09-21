@@ -87,7 +87,22 @@ Before using this, please make sure that you published the config files.
 
 ## AIssue Services, Service Provider and Facade
 
-// todo
+
+## Terminology
+
+**policyMethod** : It is the definition that provides authorization check before reaching the Issuable.
+
+**IssueType**   : IssueType is Workflow type's name determined by system authority.
+
+**transition** : transition is changing of type example(todo,in_progres,done,etc).
+
+**status** : status is IssueModel's current type type example(todo,in_progres,done,etc).
+
+**Issueable** : Issueable  is an model that contains makeTransition,canMakeTransition,getTransitionableStatuses functions and workflow information.
+
+
+
+
 
 ### Creating an Issuable
 ```php
@@ -97,7 +112,23 @@ $createdModel = Issueable::create(
     );
 ```
 
-### Making a transition for todo, in_progres and done
+### MakeTransition function in AIssueModel is making transformation for todo,in_progress,done
+```php
+
+  
+    $createdModel = Issueable::create(
+        ['name' => 'test isuable model ']
+    );
+
+    /** @var AIssue $createdIssueModel */
+    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdf', 1, \Illuminate\Support\Carbon::now());
+
+    $transition = $createdIssueModel->makeTransition('in_progress');
+
+
+```
+
+### canMakeTransition function in AIssueModel is checking policyMethod permission from config file
 ```php
 
     $createdModel = Issueable::create(
@@ -106,12 +137,12 @@ $createdModel = Issueable::create(
     
         /** @var AIssue $createdIssueModel */
         $createdIssueModel = $createdModel->createIssue(1, 1, 'example', 'example isssue', 'example', 1, \Illuminate\Support\Carbon::now());
-                                                                                                        //todo,in_progress,done 
+                                                                                                     
         $createdIssueModel->canMakeTransition('todo')
 
 ```
 
-### Getting transitionable statuses
+### getTransitionableStatuses function in AIssueModel is getting transitionable statustes from config file if it is got any permission
 ```php
 
     $createdModel = Issueable::create(
@@ -122,7 +153,6 @@ $createdModel = Issueable::create(
     $createdIssueModel = $createdModel->createIssue(1, 1, 'example', 'example isssue', 'example', 1, \Illuminate\Support\Carbon::now());
     $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
 
-    $this->assertTrue($transitionable == ["todo","in_progress"]);
 
 ```
 
