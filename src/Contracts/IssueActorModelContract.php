@@ -14,12 +14,13 @@ interface IssueActorModelContract
      *
      * @return array<string>
      */
-    public static function getActorConnectiveConnectionTypes(): array;
+    public static function getActorConnectiveConnectionTypes() : array;
 
+    
     public function getActorName(): string;
 
     /**
      * ConnectiveCollection<AIssue>
      */
-    public function getActingModels(string $connectionType): ConnectiveCollection;
+    public function getActingModels(string $connectionType) : ConnectiveCollection;
 }
