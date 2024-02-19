@@ -15,26 +15,16 @@ class Issueable extends Model implements AIssueModelContract
 
     protected $fillable = ['name'];
 
-    /**
-     * @param  string  $issueType
-     * @return string
-     */
     public static function getAIssueDefaultStatus(string $issueType): string
     {
         return 'todo';
     }
 
-    /**
-     * @return string
-     */
     public static function getAIssueModelType(): string
     {
         return 'AuroraWebSoftware\AIssue\Tests\Models\Issueable';
     }
 
-    /**
-     * @return int
-     */
     public function getAIssueModelId(): int
     {
         return $this->id;
