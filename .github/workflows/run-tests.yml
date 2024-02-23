@@ -66,6 +66,6 @@ jobs:
       - name: Execute tests
         run: vendor/bin/pest
         env:
-          DB_USERNAME: aauth
-          DB_PASSWORD: aauth
+          DB_USERNAME: aissue
+          DB_PASSWORD: aissue
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
