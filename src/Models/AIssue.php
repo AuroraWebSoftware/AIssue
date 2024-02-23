@@ -2,53 +2,34 @@
 
 namespace AuroraWebSoftware\AIssue\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use AuroraWebSoftware\ArFlow\Contacts\StateableModelContract;
+use AuroraWebSoftware\ArFlow\Traits\HasState;
+use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
+use AuroraWebSoftware\Connective\Traits\Connective;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $status
  * @property-read string $issue_type
  */
-class AIssue extends Model
+class AIssue extends Model implements ConnectiveContract, StateableModelContract
 {
-    use HasFactory;
+    use Connective;
+    use HasState {
+        HasState::getId insteadof Connective;
+    }
 
     public $guarded = [];
 
     protected $table = 'aissue_issues';
 
-    /**
-     * @return string
-     */
-    public function getIssueType(): string
+    public static function supportedConnectionTypes(): array
     {
-        return $this->issue_type;
+        return ['responsible', 'participant', 'observer'];
     }
 
-    /**
-     * @param  string  $status
-     * @return bool
-     */
-    public function canMakeTransition(string $status): bool
+    public static function supportedWorkflows(): array
     {
-        return \AuroraWebSoftware\AIssue\Facades\AIssue::canMakeTransition($this, $status);
-    }
-
-    /**
-     * @param  string  $status
-     * @return AIssue
-     */
-    public function makeTransition(string $status): AIssue
-    {
-        return \AuroraWebSoftware\AIssue\Facades\AIssue::makeTransition($this, $status);
-    }
-
-    /**
-     * @param  AIssue  $issue
-     * @return array
-     */
-    public function getTransitionableStatuses(AIssue $issue): array
-    {
-        return \AuroraWebSoftware\AIssue\Facades\AIssue::getTransitionableStatuses($this);
+        return ['simple'];
     }
 }
