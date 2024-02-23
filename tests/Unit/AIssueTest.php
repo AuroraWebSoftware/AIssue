@@ -1,282 +1,76 @@
 <?php
 
-use AuroraWebSoftware\AIssue\Exceptions\TransitionPermissionException;
 use AuroraWebSoftware\AIssue\Models\AIssue;
-use AuroraWebSoftware\AIssue\Tests\Models\Issueable;
+use AuroraWebSoftware\AIssue\Tests\Models\User;
+use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 
 beforeEach(function () {
+
     Artisan::call('migrate:fresh');
 
-    Schema::create('issueables', function (Blueprint $table) {
+    Schema::create('users', function (Blueprint $table) {
         $table->id();
         $table->string('name');
         $table->timestamps();
     });
 
-    $mockPolicyFunction = function ($permission): bool {
-        if ($permission == 'todo_perm' || $permission == 'in_progress_perm') {
-            return true;
-        }
+    $classArflow = require __DIR__.'/../../vendor/aurorawebsoftware/arflow/database/migrations/create_arflow_history_table.php';
+    (new $classArflow)->up();
 
-        return false;
-    };
+    $classConnective = require __DIR__.'/../../vendor/aurorawebsoftware/connective/database/migrations/2023_10_11_192125_create_connectives_table.php';
+    (new $classConnective)->up();
 
-    Config::set('aissue.policyMethod', $mockPolicyFunction);
-});
+    Config::set('arflow',
+        [
+            'workflows' => [
+                'simple' => [
+                    'states' => ['state1', 'state2', 'state3'],
+                    'initial_state' => 'state1',
+                    'transitions' => [
+                        'transition_name' => [
+                            'from' => ['state1'],
+                            'to' => 'state2',
+                            'guards' => [],
+                            'actions' => [],
+                            'success_metadata' => ['key' => 'value'],
+                            'success_jobs' => [],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
-test('can read aissue config', function () {
-    $this->assertNotNull(config('aissue'));
-});
-
-test('can access policy method', function () {
-    $this->assertTrue(config('aissue')['policyMethod'] instanceof \Closure);
-});
-
-test('can access policy method works for todo', function () {
-    $this->assertTrue(config('aissue')['policyMethod']('todo_perm'));
-});
-
-test('can access policy method works for done', function () {
-    $this->assertFalse(config('aissue')['policyMethod']('done_perm'));
-});
-
-test('can create aissue for a model using trait', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 1']
+    Config::set('connective',
+        [
+            'connection_types' => ['participant', 'responsible', 'observer'],
+        ],
     );
 
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 1.1', 'asdasd', 1, Carbon::now());
-
-    $this->assertEquals(
-        AIssue::where('id', '=', $createdIssueModel->id)->first()->summary,
-        $createdIssueModel->summary
-    );
 });
 
-test('can check make transition for todo using trait', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 2']
-    );
+it('can create an issue with simple workflow and responsible user ', function () {
 
-    /** @var AIssue $createdIssueModel */
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, Carbon::now());
+    /**
+     * @var User&ConnectiveContract $user1
+     */
+    $user1 = User::create(['name' => 'user 1']);
 
-    $this->assertTrue($createdIssueModel->canMakeTransition('todo'));
+    $data = ['summary' => 'summary', 'description' => 'descr'];
+
+    /**
+     * @var AIssue $issue
+     */
+    $issue = AIssue::create($data);
+    $issue->applyWorkflow('simple');
+
+    $issue->connectTo($user1, 'responsible');
+
+    $this->assertEquals($issue->currentState(), 'state1');
+    $this->assertEquals($user1->inverseConnectives(connectionTypes: 'responsible')->count(), 1);
+    $this->assertEquals($issue->connectives(connectionTypes: 'responsible')->count(), 1);
+
 });
-
-test('can check make transition for in_progress using trait', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 3']
-    );
-
-    /** @var AIssue $createdIssueModel */
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, Carbon::now());
-
-    $this->assertTrue($createdIssueModel->canMakeTransition('in_progress'));
-});
-
-test('can check make transition for done', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 4']
-    );
-
-    /** @var AIssue $createdIssueModel */
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, Carbon::now());
-
-    $this->assertFalse($createdIssueModel->canMakeTransition('done'));
-});
-
-test('can make transition using Issue Model', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 5']
-    );
-
-    /** @var AIssue $createdIssueModel */
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, Carbon::now());
-
-    $transition = $createdIssueModel->makeTransition('in_progress');
-
-    $this->assertTrue($transition->status == 'in_progress');
-});
-
-test('cannot make transition using Issue Model without permission', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 5']
-    );
-
-    /** @var AIssue $createdIssueModel */
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, Carbon::now());
-
-    $transition = $createdIssueModel->makeTransition('done');
-})->throws(TransitionPermissionException::class);
-
-test('can check get transitionable statuses ', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 4']
-    );
-
-    /** @var AIssue $createdIssueModel */
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdasd', 1, Carbon::now());
-    $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
-    $this->assertTrue($transitionable == ['todo', 'in_progress']);
-});
-
-test('can create aissue using service class', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 1 service class']
-    );
-
-    $aissueService = new AuroraWebSoftware\AIssue\AIssue;
-
-    $data = [
-        'model_type' => $createdModel->getAIssueModelType(),
-        'model_id' => $createdModel->getAIssueModelId(),
-        'assignee_id' => 1,
-        'creater_id' => 1,
-        'issue_type' => 'task',
-        'summary' => 'test isssue service class',
-        'description' => 'asdasd',
-        'priority' => 1,
-        'status' => $createdModel->getAIssueDefaultStatus('task'),
-        'duedate' => Carbon::now(),
-    ];
-
-    $createdIssueModel = $aissueService->createIssue($data);
-    $this->assertEquals(
-        AIssue::where('id', '=', $createdIssueModel->id)->first()->summary,
-        $createdIssueModel->summary
-    );
-});
-
-test('can check make transition for todo using service class', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 2 service class']
-    );
-
-    $aissueService = new AuroraWebSoftware\AIssue\AIssue;
-
-    $data = [
-        'model_type' => $createdModel->getAIssueModelType(),
-        'model_id' => $createdModel->getAIssueModelId(),
-        'assignee_id' => 1,
-        'creater_id' => 1,
-        'issue_type' => 'task',
-        'summary' => 'test isssue service class',
-        'description' => 'asdasd',
-        'priority' => 1,
-        'status' => $createdModel->getAIssueDefaultStatus('task'),
-        'duedate' => Carbon::now(),
-    ];
-
-    $createdIssueModel = $aissueService->createIssue($data);
-
-    $this->assertTrue($createdIssueModel->canMakeTransition('todo'));
-});
-
-test('can check make transition for in_progress using service class', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 3 service class']
-    );
-
-    $aissueService = new AuroraWebSoftware\AIssue\AIssue;
-
-    $data = [
-        'model_type' => $createdModel->getAIssueModelType(),
-        'model_id' => $createdModel->getAIssueModelId(),
-        'assignee_id' => 1,
-        'creater_id' => 1,
-        'issue_type' => 'task',
-        'summary' => 'test isssue service class',
-        'description' => 'asdasd',
-        'priority' => 1,
-        'status' => $createdModel->getAIssueDefaultStatus('task'),
-        'duedate' => Carbon::now(),
-    ];
-
-    $createdIssueModel = $aissueService->createIssue($data);
-    $this->assertTrue($createdIssueModel->canMakeTransition('in_progress'));
-});
-
-test('can check make transition for done from service class', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 4 service class']
-    );
-
-    $aissueService = new AuroraWebSoftware\AIssue\AIssue;
-
-    $data = [
-        'model_type' => $createdModel->getAIssueModelType(),
-        'model_id' => $createdModel->getAIssueModelId(),
-        'assignee_id' => 1,
-        'creater_id' => 1,
-        'issue_type' => 'task',
-        'summary' => 'test isssue service class',
-        'description' => 'asdasd',
-        'priority' => 1,
-        'status' => $createdModel->getAIssueDefaultStatus('task'),
-        'duedate' => Carbon::now(),
-    ];
-
-    $createdIssueModel = $aissueService->createIssue($data);
-    $this->assertFalse($createdIssueModel->canMakeTransition('done'));
-});
-
-test('can make transition using service class', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 5 service class']
-    );
-
-    $aissueService = new AuroraWebSoftware\AIssue\AIssue;
-
-    $data = [
-        'model_type' => $createdModel->getAIssueModelType(),
-        'model_id' => $createdModel->getAIssueModelId(),
-        'assignee_id' => 1,
-        'creater_id' => 1,
-        'issue_type' => 'task',
-        'summary' => 'test isssue service class',
-        'description' => 'asdasd',
-        'priority' => 1,
-        'status' => $createdModel->getAIssueDefaultStatus('task'),
-        'duedate' => Carbon::now(),
-    ];
-
-    $createdIssueModel = $aissueService->createIssue($data);
-
-    $transition = $createdIssueModel->makeTransition('in_progress');
-
-    $this->assertTrue($transition->status == 'in_progress');
-});
-
-test('can check get transitionable statuses from service class', function () {
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model 4 service class']
-    );
-
-    $aissueService = new AuroraWebSoftware\AIssue\AIssue;
-
-    $data = [
-        'model_type' => $createdModel->getAIssueModelType(),
-        'model_id' => $createdModel->getAIssueModelId(),
-        'assignee_id' => 1,
-        'creater_id' => 1,
-        'issue_type' => 'task',
-        'summary' => 'test isssue service class',
-        'description' => 'asdasd',
-        'priority' => 1,
-        'status' => $createdModel->getAIssueDefaultStatus('task'),
-        'duedate' => Carbon::now(),
-    ];
-
-    $createdIssueModel = $aissueService->createIssue($data);
-
-    $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
-    $this->assertTrue($transitionable == ['todo', 'in_progress']);
-});
-
-// todo all Facade Class tests must be written.
