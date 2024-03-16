@@ -3,11 +3,12 @@
 namespace AuroraWebSoftware\AIssue\Contracts;
 
 use AuroraWebSoftware\Connective\Collections\ConnectiveCollection;
+use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
 
 /**
  * IssueActorModelContract
  */
-interface IssueActorModelContract
+interface IssueActorModelContract extends ConnectiveContract
 {
     public function getActorName(): string;
 

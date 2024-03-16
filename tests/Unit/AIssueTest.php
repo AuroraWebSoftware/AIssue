@@ -4,6 +4,7 @@ use AuroraWebSoftware\AIssue\Models\AIssue;
 use AuroraWebSoftware\AIssue\Tests\Models\User;
 use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
@@ -23,6 +24,9 @@ beforeEach(function () {
 
     $classConnective = require __DIR__.'/../../vendor/aurorawebsoftware/connective/database/migrations/2023_10_11_192125_create_connectives_table.php';
     (new $classConnective)->up();
+
+    $classACalendar = require __DIR__.'/../../vendor/aurorawebsoftware/acalendar/database/migrations/create_acalendar_events_table.php';
+    (new $classACalendar)->up();
 
     Config::set('arflow',
         [
@@ -46,7 +50,7 @@ beforeEach(function () {
 
     Config::set('connective',
         [
-            'connection_types' => ['participant', 'responsible', 'observer'],
+            'connection_types' => ['issue_owner_model', 'issue_reporter', 'issue_responsible', 'issue_observer'],
         ],
     );
 
@@ -58,6 +62,9 @@ it('can create an issue with simple workflow and responsible user ', function ()
      * @var User&ConnectiveContract $user1
      */
     $user1 = User::create(['name' => 'user 1']);
+    $user2 = User::create(['name' => 'user 2']);
+    $user3 = User::create(['name' => 'user 3']);
+    $user4 = User::create(['name' => 'user 4']);
 
     $data = ['summary' => 'summary', 'description' => 'descr'];
 
@@ -67,7 +74,12 @@ it('can create an issue with simple workflow and responsible user ', function ()
     $issue = AIssue::create($data);
     $issue->applyWorkflow('simple');
 
-    $issue->connectTo($user1, 'responsible');
+    $issue->setReporter($user1);
+    $issue->setResponsible($user2);
+    $issue->addObserver($user3);
+    $issue->addObserver($user4);
+
+    $issue->setDueDate(Carbon::today());
 
     $this->assertEquals($issue->currentState(), 'state1');
     $this->assertEquals($user1->inverseConnectives(connectionTypes: 'responsible')->count(), 1);
