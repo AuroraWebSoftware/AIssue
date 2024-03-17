@@ -9,7 +9,7 @@ trait AIssueActor
     /**
      * ConnectiveCollection<AIssue>
      */
-    public function getActingModels(string $connectionType): ConnectiveCollection
+    public function getActingIssues(string $connectionType): ConnectiveCollection
     {
         return $this->inverseConnectives($connectionType);
     }

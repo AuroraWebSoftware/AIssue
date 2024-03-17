@@ -56,7 +56,7 @@ beforeEach(function () {
 
 });
 
-it('can create an issue with simple workflow and responsible user ', function () {
+it('can create an issue with simple workflow with a reporter, responsible user and 2 observers and due date ', function () {
 
     /**
      * @var User&ConnectiveContract $user1
@@ -81,8 +81,26 @@ it('can create an issue with simple workflow and responsible user ', function ()
 
     $issue->setDueDate(Carbon::today());
 
-    $this->assertEquals($issue->currentState(), 'state1');
-    $this->assertEquals($user1->inverseConnectives(connectionTypes: 'responsible')->count(), 1);
-    $this->assertEquals($issue->connectives(connectionTypes: 'responsible')->count(), 1);
-
+    expect($issue->currentState())->toBe('state1')
+        ->and($user1->getActingIssues('issue_reporter'))
+        ->toHaveCount(1)
+        ->and($user2->getActingIssues('issue_responsible'))
+        ->toHaveCount(1)
+        ->and($user3->getActingIssues('issue_observer'))
+        ->toHaveCount(1)
+        ->and($user4->getActingIssues('issue_observer'))
+        ->toHaveCount(1)
+        ->and($issue->getDueDate())
+        ->toBeInstanceOf(Carbon::class)
+        ->and($issue->getDueDate()?->format('Y-m-d'))
+        ->toEqual(Carbon::today()->format('Y-m-d'))
+        ->and($issue->getReporter()?->getId())
+        ->toBe($user1->getId())
+        ->and($issue->getResponsible()?->getId())
+        ->toBe($user2->getId())
+        ->and($issue->getObservers())
+        ->toHaveCount(2);
 });
+
+// todo state değişimleri
+// remove'lar

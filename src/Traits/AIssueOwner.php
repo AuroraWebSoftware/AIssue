@@ -10,7 +10,7 @@ trait AIssueOwner
     /**
      * ConnectiveCollection<AIssue>
      */
-    public function getActingModels(): ConnectiveCollection
+    public function getOwningIssues(): ConnectiveCollection
     {
         /**
          * @var IssueOwnerModelContract $this
