@@ -15,15 +15,13 @@ The Laravel AIssue package provides a comprehensive solution for managing issues
 You can install the package via composer:
 
 ```bash
-bashCopy code
-composer require aurorawebsolutions/aissue
+composer require aurorawebsoftware/aissue
 
 ```
 
 After installation, publish and run the migrations with:
 
 ```bash
-bashCopy code
 php artisan vendor:publish --provider="AuroraWebSoftware\AIssue\AIssueServiceProvider" --tag="migrations"
 php artisan migrate
 
@@ -44,7 +42,6 @@ Before diving into the code, it's essential to understand the main components of
 Create a new issue:
 
 ```php
-phpCopy code
 use AuroraWebSoftware\AIssue\Models\AIssue;
 
 $issue = AIssue::create([
@@ -60,7 +57,6 @@ $issue->applyWorkflow('simple');
 Add actors to an issue:
 
 ```php
-phpCopy code
 // Assuming $user1 and $user2 are instances of a Model that implements IssueActorModelContract
 $issue->setReporter($user1); // Set the reporter
 $issue->setResponsible($user2); // Set the responsible party
@@ -70,7 +66,6 @@ $issue->setResponsible($user2); // Set the responsible party
 Manage issue states:
 
 ```php
-phpCopy code
 // Transition to another state
 $issue->transitionTo('state2');
 
@@ -82,7 +77,6 @@ $currentState = $issue->currentState();
 ### **Working with Connectives and Observers**
 
 ```php
-phpCopy code
 // Add observers to an issue
 $issue->addObserver($user3);
 $issue->addObserver($user4);
@@ -98,7 +92,6 @@ $issue->removeAllObservers();
 ### **Setting and Managing Due Dates**
 
 ```php
-phpCopy code
 use Illuminate\Support\Carbon;
 
 // Set a due date for the issue
