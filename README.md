@@ -1,201 +1,126 @@
-# AIssue for Laravel
+# **Laravel AIssue Package**
 
-Basic and Lean Issue Management Package for Laravel
+The Laravel AIssue package provides a comprehensive solution for managing issues within your Laravel applications. Built with flexibility and extensibility in mind, it integrates seamlessly with Laravel's Eloquent ORM, offering a rich set of features to handle issue tracking, state management, and connections between different models.
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/aurorawebsoftware/aissue.svg?style=flat-square)](https://packagist.org/packages/aurorawebsoftware/aissue)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/aurorawebsoftware/aissue/run-tests?label=tests)](https://github.com/aurorawebsoftware/aissue/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/aurorawebsoftware/aissue/Check%20&%20fix%20styling?label=code%20style)](https://github.com/aurorawebsoftware/aissue/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/aurorawebsoftware/aissue.svg?style=flat-square)](https://packagist.org/packages/aurora/aissue)
+## **Features**
 
+- **Customizable Issue Tracking**: Track issues with customizable fields, descriptions, summaries, and timestamps.
+- **Workflow Integration**: Utilize the ArFlow package for state management of issues, allowing for complex workflows with multiple states and transitions.
+- **Dynamic Relationships**: Leverage the Connective package for dynamic relationships between issues and various actors (e.g., reporters, responsible parties, observers).
+- **Event Management**: Incorporate event management for issues, including setting due dates and reminders, through integration with the ACalendar package.
+- **Extensible and Modular**: Designed with modularity in mind, allowing for easy extension and customization to fit your application's specific needs.
 
-# Features
-
-- Basic Workflow and Issue Management
-- Limitless Issue Types
-- Limitless Statuses for Issue Types
-- Authenticatable Issue Status Transitions
-- Easy to Use and Lean
----
-
-
-[<img src="https://banners.beyondco.de/AIssue.png?theme=light&packageManager=composer+require&packageName=aurorawebsoftware%2Faissue&pattern=architect&style=style_1&description=Model+Issue+Management+Package&md=1&showWatermark=0&fontSize=100px&images=check-circle" />](https://github.com/AuroraWebSoftware/Aissue)
-
-# Installation
+## **Installation**
 
 You can install the package via composer:
 
 ```bash
-composer require aurorawebsoftware/aissue
+bashCopy code
+composer require aurorawebsolutions/aissue
+
 ```
 
-You must add AIssueModelTrait Trait to the **Issueable** Model and The model must implement **AIssueModelContract**
-
-```php
-use AuroraWebSoftware\AIssue\Contracts\AIssueModelContract;
-use AuroraWebSoftware\AIssue\Traits\AIssueModelTrait;
-
-class Issueable extends Model implements AIssueModelContract
-{
-    use AIssueModelTrait;
-
-    // ...
-}
-```
-
-You can publish and run the migrations with:
+After installation, publish and run the migrations with:
 
 ```bash
+bashCopy code
+php artisan vendor:publish --provider="AuroraWebSoftware\AIssue\AIssueServiceProvider" --tag="migrations"
 php artisan migrate
+
 ```
 
-You can publish the config file with:
+## **Usage**
 
-```bash
-php artisan vendor:publish --tag="aissue-config"
-```
+### **Basic Concepts**
 
-This is the example contents of the published config file:
-```bash
+Before diving into the code, it's essential to understand the main components of the AIssue package:
 
-    return [
-        'policyMethod' => fn ($permission): bool => true,
-        'issueTypes' => [
-            'task' => [
-                'todo' => ['sort' => 1, 'permission' => 'todo_perm'],
-                'in_progress' => ['sort' => 2, 'permission' => 'in_progress_perm'],
-                'done' => ['sort' => 3, 'permission' => 'done_perm'],
-            ],
-        ],
-    ];
-```
+- **Issues**: The central entity representing a problem or task that needs to be addressed.
+- **Actors**: Entities such as users who interact with issues in different capacities (e.g., reporter, responsible party).
+- **Workflow States**: Define the lifecycle of an issue through various states (e.g., open, in progress, closed).
 
-**Permission Config File**
+### **Defining and Managing Issues**
 
-Permissions are stored `config/aissue.php` is published after installing
+Create a new issue:
 
-
-# Aissue Terminology
-
-Before using AIssue its worth to understand the main terminology of AIssue.
-The difference of Issue from other packages is that it perform simple-level workflows with its simplified structure.
-
-
-# Usage
-
-Before using this, please make sure that you published the config files.
-
-
-## AIssue Services, Service Provider and Facade
-
-
-## Terminology
-
-**policyMethod** : It is the definition that provides authorization check before reaching the Issuable.
-
-**IssueType**   : IssueType is Workflow type's name determined by system authority.
-
-**transition** : transition is changing of type example(todo,in_progres,done,etc).
-
-**status** : status is IssueModel's current type type example(todo,in_progres,done,etc).
-
-**Issueable** : Issueable  is an model that contains makeTransition,canMakeTransition,getTransitionableStatuses functions and workflow information.
-
-
-
-
-
-### Creating an Issuable
 ```php
+phpCopy code
+use AuroraWebSoftware\AIssue\Models\AIssue;
 
-$createdModel = Issueable::create(
-        ['name' => 'example isuable model']
-    );
+$issue = AIssue::create([
+    'summary' => 'Example issue',
+    'description' => 'Detailed description of the issue',
+]);
+
+// Apply a predefined workflow
+$issue->applyWorkflow('simple');
+
 ```
 
-### MakeTransition function in AIssueModel is making transformation for todo,in_progress,done
+Add actors to an issue:
+
 ```php
-
-  
-    $createdModel = Issueable::create(
-        ['name' => 'test isuable model ']
-    );
-
-    /** @var AIssue $createdIssueModel */
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'task', 'test isssue 2.1', 'asdf', 1, \Illuminate\Support\Carbon::now());
-
-    $transition = $createdIssueModel->makeTransition('in_progress');
-
+phpCopy code
+// Assuming $user1 and $user2 are instances of a Model that implements IssueActorModelContract
+$issue->setReporter($user1); // Set the reporter
+$issue->setResponsible($user2); // Set the responsible party
 
 ```
 
-### canMakeTransition function in AIssueModel is checking policyMethod permission from config file
+Manage issue states:
+
 ```php
+phpCopy code
+// Transition to another state
+$issue->transitionTo('state2');
 
-    $createdModel = Issueable::create(
-            ['name' => 'example isuable model']
-        );
-    
-        /** @var AIssue $createdIssueModel */
-        $createdIssueModel = $createdModel->createIssue(1, 1, 'example', 'example isssue', 'example', 1, \Illuminate\Support\Carbon::now());
-                                                                                                     
-        $createdIssueModel->canMakeTransition('todo')
+// Check current state
+$currentState = $issue->currentState();
 
 ```
 
-### getTransitionableStatuses function in AIssueModel is getting transitionable statustes from config file if it is got any permission
+### **Working with Connectives and Observers**
+
 ```php
+phpCopy code
+// Add observers to an issue
+$issue->addObserver($user3);
+$issue->addObserver($user4);
 
-    $createdModel = Issueable::create(
-        ['name' => 'example isuable model 4']
-    );
+// Remove an observer
+$issue->removeObserver($user3);
 
-    /** @var AIssue $createdIssueModel */
-    $createdIssueModel = $createdModel->createIssue(1, 1, 'example', 'example isssue', 'example', 1, \Illuminate\Support\Carbon::now());
-    $transitionable = $createdIssueModel->getTransitionableStatuses($createdIssueModel);
-
+// Remove all observers
+$issue->removeAllObservers();
 
 ```
 
-### Using AIssue Interface and Trait with Eloquent Models
-To turn an Eloquent Model into an AIssue ; 
-Model must implement AIssueModelContract and use AIssueModelTrait Trait.
-After adding AIssueModelContract trait, you will be able to use AIssue methods within the model
+### **Setting and Managing Due Dates**
+
 ```php
+phpCopy code
+use Illuminate\Support\Carbon;
 
-    namespace App\Models\ExampleModel;
+// Set a due date for the issue
+$issue->setDueDate(Carbon::today());
 
-    use AuroraWebSoftware\AIssue\Contracts\AIssueModelContract;
-    use AuroraWebSoftware\AIssue\Traits\AIssueModelTrait;
-    use Illuminate\Database\Eloquent\Model;
-    
-    class ExampleModel extends Model implements AIssueModelContract
-    {
-        use AIssueModelTrait;
-    
-        // implementation
-}
+// Remove the due date
+$issue->removeDueDate();
 
 ```
 
+## **Advanced Usage**
 
-## Changelog
+The AIssue package supports more advanced features and integrations, allowing for a highly customizable issue tracking system. For more details on these advanced features, please refer to the comprehensive documentation.
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+## **Contributing**
 
-## Contributing
+Contributions are welcome and will help make AIssue even better. If you're interested in contributing, please check out the contributing guide.
 
-Please see [CONTRIBUTING](README-contr.md) for details.
+## **License**
 
-## Security Vulnerabilities
+The Laravel AIssue package is open-sourced software licensed under the [MIT license](https://chat.openai.com/g/g-8MaB2KpKn-laravel-developer/c/LICENSE.md).
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+---
 
-
-## Credits
-
-- [Aurora Web Software Team](https://github.com/AuroraWebSoftware)
-- [All Contributors](../../contributors)
-
-## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+This README provides a solid foundation for your Laravel AIssue package, outlining its capabilities, how to get started, and how to use its main features. You can further customize and expand it based on the specific details and additional functionalities of your package.
