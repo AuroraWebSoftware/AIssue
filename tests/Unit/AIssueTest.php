@@ -102,5 +102,94 @@ it('can create an issue with simple workflow with a reporter, responsible user a
         ->toHaveCount(2);
 });
 
-// todo state değişimleri
-// remove'lar
+it('can create an issue and make transition and add or remove actors and due date', function () {
+
+    /**
+     * @var User&ConnectiveContract $user1
+     */
+    $user1 = User::create(['name' => 'user 1']);
+    $user2 = User::create(['name' => 'user 2']);
+    $user3 = User::create(['name' => 'user 3']);
+    $user4 = User::create(['name' => 'user 4']);
+
+    $data = ['summary' => 'summary', 'description' => 'descr'];
+
+    /**
+     * @var AIssue $issue
+     */
+    $issue = AIssue::create($data);
+    $issue->applyWorkflow('simple');
+
+    $issue->setReporter($user1);
+
+    expect()
+        ->and($user1->getActingIssues('issue_reporter'))
+        ->toHaveCount(1)
+        ->and($issue->getReporter()?->getId())
+        ->toBe($user1->getId());
+
+    $issue->removeReporter();
+
+    expect()
+        ->and($user1->getActingIssues('issue_reporter'))
+        ->toHaveCount(0);
+
+    $issue->setResponsible($user2);
+
+    expect()
+        ->and($user2->getActingIssues('issue_responsible'))
+        ->toHaveCount(1)
+        ->and($issue->getResponsible()?->getId())
+        ->toBe($user2->getId());
+
+    $issue->removeResponsible();
+
+    expect()
+        ->and($user2->getActingIssues('issue_responsible'))
+        ->toHaveCount(0);
+
+    $issue->addObserver($user3);
+    $issue->addObserver($user4);
+
+    expect()
+        ->and($issue->getObservers())
+        ->toHaveCount(2);
+
+    $issue->removeObserver($user3);
+
+    expect()
+        ->and($issue->getObservers())
+        ->toHaveCount(1);
+
+    $issue->removeObserver($user4);
+
+    expect()
+        ->and($issue->getObservers())
+        ->toHaveCount(0);
+
+    $issue->addObserver($user3);
+    $issue->addObserver($user4);
+
+    $issue->removeAllObservers();
+
+    expect()
+        ->and($issue->getObservers())
+        ->toHaveCount(0);
+
+    $issue->setDueDate(Carbon::today());
+
+    expect()
+        ->and($issue->getDueDate()?->format('Y-m-d'))
+        ->toEqual(Carbon::today()->format('Y-m-d'));
+
+    $issue->removeDueDate();
+
+    expect()
+        ->and($issue->getDueDate())
+        ->toBeNull();
+
+    $issue->transitionTo(toState: 'state2', logHistoryTransitionAction: false);
+
+    expect($issue->currentState())->toEqual('state2');
+
+});
