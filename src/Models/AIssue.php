@@ -8,6 +8,7 @@ use AuroraWebSoftware\ACalendar\Exceptions\EventParameterValidationException;
 use AuroraWebSoftware\ACalendar\Models\Event;
 use AuroraWebSoftware\ACalendar\Traits\HasEvents;
 use AuroraWebSoftware\AIssue\Contracts\IssueActorModelContract;
+use AuroraWebSoftware\AIssue\Contracts\IssueOwnerModelContract;
 use AuroraWebSoftware\ArFlow\Contacts\StateableModelContract;
 use AuroraWebSoftware\ArFlow\Traits\HasState;
 use AuroraWebSoftware\Connective\Collections\ConnectiveCollection;
@@ -179,5 +180,24 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
         foreach ($this->getObservers() ?? [] as $observer) {
             $observer->delete();
         }
+    }
+
+    public function getOwnerModel(): IssueOwnerModelContract|Model|null
+    {
+        return $this->connectives('issue_owner_model')?->first();
+    }
+
+    /**
+     * @throws ConnectionTypeNotSupportedException
+     * @throws ConnectionTypeException
+     */
+    public function setOwnerModel(IssueActorModelContract&Model $issueOwnerModel): void
+    {
+        if ($this->connections('issue_owner_model')) {
+            $this->connections('issue_owner_model')
+                ->each(fn (Model $connection) => $connection->delete());
+        }
+
+        $this->connectTo($issueOwnerModel, 'issue_owner_model');
     }
 }

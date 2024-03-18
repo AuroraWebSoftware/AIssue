@@ -1,6 +1,7 @@
 <?php
 
 use AuroraWebSoftware\AIssue\Models\AIssue;
+use AuroraWebSoftware\AIssue\Tests\Models\ExampleIssueOwner;
 use AuroraWebSoftware\AIssue\Tests\Models\User;
 use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,6 +15,12 @@ beforeEach(function () {
     Artisan::call('migrate:fresh');
 
     Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->timestamps();
+    });
+
+    Schema::create('example_issue_owners', function (Blueprint $table) {
         $table->id();
         $table->string('name');
         $table->timestamps();
@@ -191,5 +198,11 @@ it('can create an issue and make transition and add or remove actors and due dat
     $issue->transitionTo(toState: 'state2', logHistoryTransitionAction: false);
 
     expect($issue->currentState())->toEqual('state2');
+
+    $exampleIssueOwner1 = ExampleIssueOwner::create(['name' => 'example issue owner 1']);
+    $exampleIssueOwner1->ownIssue($issue);
+    expect($exampleIssueOwner1->getOwningIssues())->toHaveCount(1);
+
+    // todo delete kısmı yazılmadı henüz
 
 });
