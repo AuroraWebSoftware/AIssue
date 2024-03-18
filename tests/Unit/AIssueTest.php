@@ -203,6 +203,6 @@ it('can create an issue and make transition and add or remove actors and due dat
     $exampleIssueOwner1->ownIssue($issue);
     expect($exampleIssueOwner1->getOwningIssues())->toHaveCount(1);
 
-    // delete kısmı yazılmadı henüz
+    // todo delete kısmı yazılmadı henüz
 
 });
