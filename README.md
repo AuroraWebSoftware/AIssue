@@ -36,7 +36,7 @@ use AuroraWebSoftware\AIssue\Traits\AIssueModelTrait;
 
 class Issueable extends Model implements AIssueModelContract
 {
-    use AIssueModelTrait;;
+    use AIssueModelTrait;
 
     // ...
 }
