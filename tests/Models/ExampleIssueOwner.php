@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $name
+ *
  * @method static ExampleIssueOwner create(array $attributes = [])
  */
 class ExampleIssueOwner extends Model implements IssueOwnerModelContract
 {
-    use Connective;
     use AIssueOwner;
+    use Connective;
 
     protected $guarded = [];
 
@@ -22,6 +23,4 @@ class ExampleIssueOwner extends Model implements IssueOwnerModelContract
     {
         return [];
     }
-
-
 }

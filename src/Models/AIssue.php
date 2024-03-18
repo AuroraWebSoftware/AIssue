@@ -200,5 +200,4 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
 
         $this->connectTo($issueOwnerModel, 'issue_owner_model');
     }
-
 }

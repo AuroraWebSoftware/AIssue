@@ -26,7 +26,6 @@ beforeEach(function () {
         $table->timestamps();
     });
 
-
     $classArflow = require __DIR__.'/../../vendor/aurorawebsoftware/arflow/database/migrations/create_arflow_history_table.php';
     (new $classArflow)->up();
 
@@ -200,13 +199,10 @@ it('can create an issue and make transition and add or remove actors and due dat
 
     expect($issue->currentState())->toEqual('state2');
 
-
     $exampleIssueOwner1 = ExampleIssueOwner::create(['name' => 'example issue owner 1']);
     $exampleIssueOwner1->ownIssue($issue);
     expect($exampleIssueOwner1->getOwningIssues())->toHaveCount(1);
 
     // delete kısmı yazılmadı henüz
-
-
 
 });

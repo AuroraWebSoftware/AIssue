@@ -16,7 +16,6 @@ interface IssueOwnerModelContract extends ConnectiveContract
 
     public function disownIssue(AIssue $issue): void;
 
-
     /**
      * ConnectiveCollection<AIssue>
      */

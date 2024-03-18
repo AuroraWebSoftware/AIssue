@@ -2,7 +2,6 @@
 
 namespace AuroraWebSoftware\AIssue\Traits;
 
-use AuroraWebSoftware\AIssue\Contracts\IssueActorModelContract;
 use AuroraWebSoftware\AIssue\Contracts\IssueOwnerModelContract;
 use AuroraWebSoftware\AIssue\Models\AIssue;
 use AuroraWebSoftware\Connective\Collections\ConnectiveCollection;
@@ -31,7 +30,6 @@ trait AIssueOwner
             }
         }
     }
-
 
     /**
      * ConnectiveCollection<AIssue>
