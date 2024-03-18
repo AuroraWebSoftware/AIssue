@@ -1,3 +1,3 @@
  - dökümantasyon v2 ye göre güncellenecek
  - event reminders meselesi ve event içine like ile arama ekleme
- - phpstan
+ - test için usuable modeller
