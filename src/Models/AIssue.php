@@ -82,16 +82,16 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
         $this->deleteEvent('due_date');
     }
 
-    public function getReporter(): ?IssueActorModelContract
+    public function getReporter(): IssueActorModelContract|Model|null
     {
-        return $this->connectives('issue_reporter')->first() ?? null;
+        return $this->connectives('issue_reporter')?->first();
     }
 
     /**
      * @throws ConnectionTypeNotSupportedException
      * @throws ConnectionTypeException
      */
-    public function setReporter(IssueActorModelContract $issueActorModel): void
+    public function setReporter(IssueActorModelContract&Model $issueActorModel): void
     {
         if ($this->connections('issue_reporter')) {
             $this->connections('issue_reporter')
@@ -109,16 +109,16 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
         }
     }
 
-    public function getResponsible(): ?IssueActorModelContract
+    public function getResponsible(): IssueActorModelContract|Model|null
     {
-        return $this->connectives('issue_responsible')->first();
+        return $this->connectives('issue_responsible')?->first();
     }
 
     /**
      * @throws ConnectionTypeNotSupportedException
      * @throws ConnectionTypeException
      */
-    public function setResponsible(IssueActorModelContract $issueActorModel): void
+    public function setResponsible(IssueActorModelContract&Model $issueActorModel): void
     {
         if ($this->connections('issue_responsible')) {
             $this->connections('issue_responsible')
@@ -137,9 +137,9 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     }
 
     /**
-     * @return ConnectiveCollection<IssueActorModelContract>
+     * @return ?ConnectiveCollection<ConnectiveContract>
      */
-    public function getObservers(): ConnectiveCollection
+    public function getObservers(): ?ConnectiveCollection
     {
         return $this->connectives('issue_observer');
     }
@@ -148,11 +148,11 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
      * @throws ConnectionTypeNotSupportedException
      * @throws ConnectionTypeException
      */
-    public function addObserver(IssueActorModelContract $issueActorModel): void
+    public function addObserver(IssueActorModelContract&Model $issueActorModel): void
     {
         $add = true;
 
-        foreach ($this->getObservers() as $observer) {
+        foreach ($this->getObservers() ?? [] as $observer) {
             if ($observer->getId() === $issueActorModel->getId()) {
                 $add = false;
                 break;
@@ -166,7 +166,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
 
     public function removeObserver(IssueActorModelContract $issueActorModel): void
     {
-        foreach ($this->getObservers() as $observer) {
+        foreach ($this->getObservers() ?? [] as $observer) {
             if ($observer->getId() === $issueActorModel->getId()) {
                 $observer->delete();
                 break;
@@ -176,7 +176,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
 
     public function removeAllObservers(): void
     {
-        foreach ($this->getObservers() as $observer) {
+        foreach ($this->getObservers() ?? [] as $observer) {
             $observer->delete();
         }
     }
