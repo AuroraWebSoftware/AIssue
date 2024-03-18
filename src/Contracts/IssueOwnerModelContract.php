@@ -2,6 +2,7 @@
 
 namespace AuroraWebSoftware\AIssue\Contracts;
 
+use AuroraWebSoftware\AIssue\Models\AIssue;
 use AuroraWebSoftware\Connective\Collections\ConnectiveCollection;
 use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
 use Illuminate\Database\Query\Builder;
@@ -11,13 +12,18 @@ use Illuminate\Database\Query\Builder;
  */
 interface IssueOwnerModelContract extends ConnectiveContract
 {
-    /**
-     * ConnectiveCollection<AIssue>
-     */
-    public function getOwningIssues(): ConnectiveCollection;
+    public function ownIssue(AIssue $issue): void;
+
+    public function disownIssue(AIssue $issue): void;
+
 
     /**
      * ConnectiveCollection<AIssue>
      */
-    public function scopeAllOwningIssues(Builder $query): ConnectiveCollection;
+    public function getOwningIssues(): ?ConnectiveCollection;
+
+    /**
+     * ConnectiveCollection<AIssue>
+     */
+    public function scopeAllOwningIssues(Builder $query): ?ConnectiveCollection;
 }
