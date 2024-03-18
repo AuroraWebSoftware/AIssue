@@ -18,7 +18,7 @@ class User extends Model implements ConnectiveContract, IssueActorModelContract
 
     protected $guarded = [];
 
-    public function getActorName(): string
+    public function getIssueActorName(): string
     {
         return $this->name;
     }
@@ -26,5 +26,10 @@ class User extends Model implements ConnectiveContract, IssueActorModelContract
     public static function supportedConnectionTypes(): array
     {
         return [];
+    }
+
+    public function getIssueReminderConfig(): array
+    {
+        return ['channel' => 'email', 'email' => 'example@ex.com'];
     }
 }

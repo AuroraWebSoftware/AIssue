@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.2",
+        "aurorawebsoftware/acalendar": "^1.0",
         "aurorawebsoftware/arflow": "^1.1",
         "aurorawebsoftware/connective": "^1.0.4",
         "illuminate/contracts": "^10.0",

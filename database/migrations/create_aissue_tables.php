@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // todo
         Blueprint::macro('arflow', function (string $workflow = 'workflow', string $state = 'state', string $stateMetadata = 'state_metadata') {
             /**
              * @var Blueprint $this
