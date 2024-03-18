@@ -95,7 +95,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_reporter')) {
             $this->connections('issue_reporter')
-                ->each(fn(Model $connection) => $connection->delete());
+                ->each(fn (Model $connection) => $connection->delete());
         }
 
         $this->connectTo($issueActorModel, 'issue_reporter');
@@ -105,7 +105,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_reporter')) {
             $this->connections('issue_reporter')
-                ->each(fn(Model $connection) => $connection->delete());
+                ->each(fn (Model $connection) => $connection->delete());
         }
     }
 
@@ -122,7 +122,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_responsible')) {
             $this->connections('issue_responsible')
-                ->each(fn(Model $connection) => $connection->delete());
+                ->each(fn (Model $connection) => $connection->delete());
         }
 
         $this->connectTo($issueActorModel, 'issue_responsible');
@@ -132,7 +132,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_responsible')) {
             $this->connections('issue_responsible')
-                ->each(fn(Model $connection) => $connection->delete());
+                ->each(fn (Model $connection) => $connection->delete());
         }
     }
 
