@@ -15,6 +15,7 @@ use AuroraWebSoftware\Connective\Collections\ConnectiveCollection;
 use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
 use AuroraWebSoftware\Connective\Exceptions\ConnectionTypeException;
 use AuroraWebSoftware\Connective\Exceptions\ConnectionTypeNotSupportedException;
+use AuroraWebSoftware\Connective\Models\Connection;
 use AuroraWebSoftware\Connective\Traits\Connective;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -167,18 +168,25 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
 
     public function removeObserver(IssueActorModelContract $issueActorModel): void
     {
-        foreach ($this->getObservers() ?? [] as $observer) {
-            if ($observer->getId() === $issueActorModel->getId()) {
-                $observer->delete();
-                break;
-            }
+        if ($this->connections('issue_observer')) {
+            $this->connections('issue_observer')
+                ->each(function (Model $connection) use ($issueActorModel) {
+
+                    /**
+                     * @var Connection $connection
+                     */
+                    if ($connection->connectedTo()->getId() === $issueActorModel->getId()) {
+                        $connection->delete();
+                    }
+                });
         }
     }
 
     public function removeAllObservers(): void
     {
-        foreach ($this->getObservers() ?? [] as $observer) {
-            $observer->delete();
+        if ($this->connections('issue_observer')) {
+            $this->connections('issue_observer')
+                ->each(fn (Model $connection) => $connection->delete());
         }
     }
 
