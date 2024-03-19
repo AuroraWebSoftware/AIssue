@@ -15,6 +15,7 @@ use AuroraWebSoftware\Connective\Collections\ConnectiveCollection;
 use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
 use AuroraWebSoftware\Connective\Exceptions\ConnectionTypeException;
 use AuroraWebSoftware\Connective\Exceptions\ConnectionTypeNotSupportedException;
+use AuroraWebSoftware\Connective\Models\Connection;
 use AuroraWebSoftware\Connective\Traits\Connective;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -170,6 +171,10 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
         if ($this->connections('issue_observer')) {
             $this->connections('issue_observer')
                 ->each(function (Model $connection) use ($issueActorModel) {
+
+                    /**
+                     * @var Connection $connection
+                     */
 
                     if ($connection->connectedTo()->getId() === $issueActorModel->getId()) {
                         $connection->delete();
