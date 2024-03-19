@@ -4,6 +4,8 @@ namespace AuroraWebSoftware\AIssue\Contracts;
 
 use AuroraWebSoftware\Connective\Collections\ConnectiveCollection;
 use AuroraWebSoftware\Connective\Contracts\ConnectiveContract;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * issue actor can be one of the following:
@@ -26,4 +28,9 @@ interface IssueActorModelContract extends ConnectiveContract
      *                               ['channel' => 'email', 'email' => 'example@ex.com']
      */
     public function getIssueReminderConfig(): array;
+
+    /**
+     * @return Collection<int, Model&IssueActorModelContract>
+     */
+    public static function searchIssueActor(string $searchTerm): Collection;
 }

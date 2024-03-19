@@ -203,6 +203,23 @@ it('can create an issue and make transition and add or remove actors and due dat
     $exampleIssueOwner1->ownIssue($issue);
     expect($exampleIssueOwner1->getOwningIssues())->toHaveCount(1);
 
+
+
+    // dd(User::searchIssueActor('user'));
+
+    // search actor
+    expect(User::searchIssueActor('user'))
+        ->toHaveCount(4)
+        ->and(User::searchIssueActor('user 1'))
+        ->toHaveCount(1)
+        ->and(User::searchIssueActor('user 2'))
+        ->toHaveCount(1)
+        ->and(User::searchIssueActor('user 3'))
+        ->toHaveCount(1)
+        ->and(User::searchIssueActor('user 4'))
+        ->toHaveCount(1);
+
+
     // todo delete kısmı yazılmadı henüz
 
 });

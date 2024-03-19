@@ -96,7 +96,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_reporter')) {
             $this->connections('issue_reporter')
-                ->each(fn (Model $connection) => $connection->delete());
+                ->each(fn(Model $connection) => $connection->delete());
         }
 
         $this->connectTo($issueActorModel, 'issue_reporter');
@@ -106,7 +106,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_reporter')) {
             $this->connections('issue_reporter')
-                ->each(fn (Model $connection) => $connection->delete());
+                ->each(fn(Model $connection) => $connection->delete());
         }
     }
 
@@ -123,7 +123,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_responsible')) {
             $this->connections('issue_responsible')
-                ->each(fn (Model $connection) => $connection->delete());
+                ->each(fn(Model $connection) => $connection->delete());
         }
 
         $this->connectTo($issueActorModel, 'issue_responsible');
@@ -133,7 +133,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_responsible')) {
             $this->connections('issue_responsible')
-                ->each(fn (Model $connection) => $connection->delete());
+                ->each(fn(Model $connection) => $connection->delete());
         }
     }
 
@@ -167,18 +167,22 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
 
     public function removeObserver(IssueActorModelContract $issueActorModel): void
     {
-        foreach ($this->getObservers() ?? [] as $observer) {
-            if ($observer->getId() === $issueActorModel->getId()) {
-                $observer->delete();
-                break;
-            }
+        if ($this->connections('issue_observer')) {
+            $this->connections('issue_observer')
+                ->each(function (Model $connection) use ($issueActorModel) {
+
+                    if ($connection->connectedTo()->getId() === $issueActorModel->getId()) {
+                        $connection->delete();
+                    }
+                });
         }
     }
 
     public function removeAllObservers(): void
     {
-        foreach ($this->getObservers() ?? [] as $observer) {
-            $observer->delete();
+        if ($this->connections('issue_observer')) {
+            $this->connections('issue_observer')
+                ->each(fn(Model $connection) => $connection->delete());
         }
     }
 
@@ -195,7 +199,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
     {
         if ($this->connections('issue_owner_model')) {
             $this->connections('issue_owner_model')
-                ->each(fn (Model $connection) => $connection->delete());
+                ->each(fn(Model $connection) => $connection->delete());
         }
 
         $this->connectTo($issueOwnerModel, 'issue_owner_model');
