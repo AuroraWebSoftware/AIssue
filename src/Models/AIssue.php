@@ -175,7 +175,6 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
                     /**
                      * @var Connection $connection
                      */
-
                     if ($connection->connectedTo()->getId() === $issueActorModel->getId()) {
                         $connection->delete();
                     }
