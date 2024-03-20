@@ -18,6 +18,10 @@ interface IssueActorModelContract extends ConnectiveContract
 {
     public function getIssueActorName(): string;
 
+    public static function getModelType(): string;
+
+    public function getModelId(): int;
+
     /**
      * ConnectiveCollection<AIssue>
      */

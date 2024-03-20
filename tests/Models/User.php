@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string $name
+ * @property int $id
  */
 class User extends Model implements ConnectiveContract, IssueActorModelContract
 {
@@ -42,5 +43,15 @@ class User extends Model implements ConnectiveContract, IssueActorModelContract
     public static function searchIssueActor(string $searchTerm): Collection
     {
         return User::query()->where('name', 'like', '%'.$searchTerm.'%')->get();
+    }
+
+    public static function getModelType(): string
+    {
+        return self::class;
+    }
+
+    public function getModelId(): int
+    {
+        return $this->id;
     }
 }
