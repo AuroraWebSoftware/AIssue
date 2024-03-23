@@ -44,7 +44,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
 
     public static function getModelType(): string
     {
-        return self::class;
+        return static::class;
     }
 
     public function getModelId(): int
