@@ -25,8 +25,4 @@ interface IssueOwnerModelContract extends ConnectiveContract
      * ConnectiveCollection<AIssue>
      */
     public function scopeAllOwningIssues(Builder $query): ?ConnectiveCollection;
-
-
-
-
 }
