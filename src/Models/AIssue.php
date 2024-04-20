@@ -199,7 +199,7 @@ class AIssue extends Model implements ConnectiveContract, EventableModelContract
      * @throws ConnectionTypeNotSupportedException
      * @throws ConnectionTypeException
      */
-    public function setOwnerModel(IssueActorModelContract&Model $issueOwnerModel): void
+    public function setOwnerModel(IssueOwnerModelContract&Model $issueOwnerModel): void
     {
         if ($this->connections('issue_owner_model')) {
             $this->connections('issue_owner_model')
