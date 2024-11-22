@@ -2,6 +2,4 @@
 
 namespace AuroraWebSoftware\AIssue;
 
-class AIssue
-{
-}
+class AIssue {}
